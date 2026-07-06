@@ -134,7 +134,7 @@ export function Hero() {
 
               <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-xl bg-linear-to-br from-primary/20 to-primary/5">
                 <video
-                  src="/videos/6998541-hd_1080_1920_25fps.mp4"
+                  src="/videos/1107319_1080p_4k_3840x2160.mp4"
                   autoPlay
                   loop
                   muted
