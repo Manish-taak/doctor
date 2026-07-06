@@ -10,7 +10,7 @@ export function CtaSection() {
     <section className="py-24 sm:py-32">
       <Container>
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-foreground to-foreground/90 px-6 py-16 text-center sm:px-16">
+          <div className="relative overflow-hidden rounded-sml bg-linear-to-br from-foreground to-foreground/90 px-6 py-16 text-center sm:px-16">
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_100%_0%,color-mix(in_oklch,var(--color-primary)_35%,transparent),transparent)]"

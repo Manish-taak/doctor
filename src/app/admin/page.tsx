@@ -84,7 +84,7 @@ export default function AdminDashboardPage() {
               <div className="flex flex-col gap-4">
                 {activityFeed.map((activity, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary">
                       <activity.icon className="size-4" strokeWidth={2} />
                     </div>
                     <div className="flex flex-col gap-0.5">

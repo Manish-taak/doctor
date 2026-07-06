@@ -85,7 +85,7 @@ export default function DoctorCalendarPage() {
                     type="button"
                     onClick={() => setSelectedDate(cell.date)}
                     className={cn(
-                      "flex aspect-square flex-col items-center justify-center gap-1 rounded-xl text-sm font-medium transition-colors",
+                      "flex aspect-square flex-col items-center justify-center gap-1 rounded-sm text-sm font-medium transition-colors",
                       isSelected
                         ? "bg-primary text-primary-foreground"
                         : isToday
@@ -96,7 +96,7 @@ export default function DoctorCalendarPage() {
                     {cell.day}
                     <span
                       className={cn(
-                        "size-1 rounded-full",
+                        "size-1 rounded-sm",
                         hasAppointments ? (isSelected ? "bg-primary-foreground" : "bg-primary") : "bg-transparent"
                       )}
                     />

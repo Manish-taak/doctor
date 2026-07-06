@@ -67,7 +67,7 @@ export function SignupForm() {
 
           <div className="flex items-start gap-2">
             <Checkbox id="terms" className="mt-0.5" />
-            <Label htmlFor="terms" className="text-sm font-normal text-muted-foreground">
+            <Label htmlFor="terms" className="text-[11px] font-normal text-muted-foreground">
               I agree to the{" "}
               <Link href="/terms" className="font-medium text-foreground hover:underline">
                 Terms of Service

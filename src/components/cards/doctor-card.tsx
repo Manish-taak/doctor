@@ -26,7 +26,7 @@ export function DoctorCard({ doctor }: { doctor: Doctor }) {
           </Avatar>
           {doctor.availableToday && (
             <Badge className="bg-primary/10 text-primary">
-              <span className="mr-1 size-1.5 rounded-full bg-primary" />
+              <span className="mr-1 size-1.5 rounded-sm bg-primary" />
               Available today
             </Badge>
           )}

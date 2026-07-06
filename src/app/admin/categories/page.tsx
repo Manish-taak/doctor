@@ -83,7 +83,7 @@ export default function AdminCategoriesPage() {
         {categories.map((category) => (
           <Card key={category.id} className="ring-foreground/5">
             <CardContent className="flex flex-col items-start gap-3">
-              <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <div className="flex size-12 items-center justify-center rounded-sm bg-primary/10 text-primary">
                 <category.icon className="size-5.5" strokeWidth={2} />
               </div>
               <div className="flex flex-col gap-0.5">

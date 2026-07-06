@@ -6,7 +6,7 @@ export function StatCard({ stat }: { stat: Stat }) {
 
   return (
     <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
-      <div className="flex size-10 items-center justify-center rounded-xl bg-primary-foreground/10 text-primary-foreground/90 ring-1 ring-primary-foreground/15">
+      <div className="flex size-10 items-center justify-center rounded-sm bg-primary-foreground/10 text-primary-foreground/90 ring-1 ring-primary-foreground/15">
         <Icon className="size-4.5" strokeWidth={2} />
       </div>
       <div>

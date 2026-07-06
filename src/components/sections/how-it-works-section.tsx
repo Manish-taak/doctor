@@ -29,7 +29,7 @@ export function HowItWorksSection() {
                 key={step.id}
                 className="relative flex flex-col items-center gap-4 text-center lg:items-start lg:text-left"
               >
-                <span className="relative z-10 flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm shadow-primary/30 ring-8 ring-secondary/40">
+                <span className="relative z-10 flex size-12 items-center justify-center rounded-sm bg-primary text-primary-foreground shadow-sm shadow-primary/30 ring-8 ring-secondary/40">
                   <step.icon className="size-5" strokeWidth={2} />
                 </span>
                 <div className="flex flex-col gap-1.5">

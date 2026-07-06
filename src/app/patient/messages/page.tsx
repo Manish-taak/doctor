@@ -98,7 +98,7 @@ export default function PatientMessagesPage() {
                     >
                       <div
                         className={cn(
-                          "max-w-md rounded-2xl px-3.5 py-2 text-sm",
+                          "max-w-md rounded-sm px-3.5 py-2 text-sm",
                           message.sender === "me"
                             ? "bg-primary text-primary-foreground"
                             : "bg-muted text-foreground"

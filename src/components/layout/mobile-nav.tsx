@@ -41,7 +41,7 @@ export function MobileNav() {
               render={
                 <Link
                   href={link.href}
-                  className="rounded-lg px-3 py-2.5 text-base font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
+                  className="rounded-sm px-3 py-2.5 text-base font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
                 />
               }
             >

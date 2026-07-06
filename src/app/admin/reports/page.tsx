@@ -63,7 +63,7 @@ export default function AdminReportsPage() {
         {reports.map((report) => (
           <Card key={report.id} className="ring-foreground/5">
             <CardContent className="flex items-start gap-4">
-              <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <div className="flex size-11 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary">
                 <report.icon className="size-5" strokeWidth={2} />
               </div>
               <div className="flex flex-1 flex-col gap-1">

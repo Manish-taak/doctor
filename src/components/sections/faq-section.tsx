@@ -23,7 +23,7 @@ export function FaqSection() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="mt-12 rounded-2xl border border-border bg-card px-6 shadow-sm">
+        <Reveal delay={0.1} className="mt-12 rounded-sm border border-border bg-card px-6 shadow-sm">
           <Accordion>
             {faqs.map((faq) => (
               <AccordionItem key={faq.id} value={faq.id}>

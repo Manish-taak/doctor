@@ -68,7 +68,7 @@ export default function AdminAnalyticsPage() {
                 <TableRow key={category.id}>
                   <TableCell>
                     <div className="flex items-center gap-2.5">
-                      <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className="flex size-8 items-center justify-center rounded-sm bg-primary/10 text-primary">
                         <category.icon className="size-4" strokeWidth={2} />
                       </div>
                       <span className="text-sm font-medium text-foreground">{category.name}</span>

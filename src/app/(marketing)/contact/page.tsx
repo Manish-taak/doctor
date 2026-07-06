@@ -168,7 +168,7 @@ export default function ContactPage() {
             <Reveal delay={0.08}>
               <div
                 aria-hidden
-                className="relative flex h-40 items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-primary/20 via-secondary to-coral/10 ring-1 ring-foreground/5"
+                className="relative flex h-40 items-center justify-center overflow-hidden rounded-sm bg-linear-to-br from-primary/20 via-secondary to-coral/10 ring-1 ring-foreground/5"
               >
                 <div
                   className="pointer-events-none absolute inset-0 bg-[radial-gradient(40%_60%_at_30%_20%,color-mix(in_oklch,var(--color-primary)_25%,transparent),transparent)]"
@@ -217,7 +217,7 @@ export default function ContactPage() {
                         key={social.label}
                         href={social.href}
                         aria-label={social.label}
-                        className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                        className="flex size-9 items-center justify-center rounded-sm border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
                       >
                         <social.icon className="size-4" />
                       </Link>
