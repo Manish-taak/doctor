@@ -133,9 +133,14 @@ export function Hero() {
               </div>
 
               <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-xl bg-linear-to-br from-primary/20 to-primary/5">
-                <span className="flex size-11 items-center justify-center rounded-full bg-background/90 text-primary shadow-sm">
-                  <Video className="size-5" />
-                </span>
+                <video
+                  src="/videos/6998541-hd_1080_1920_25fps.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="size-full object-cover object-[12%]"
+                />
               </div>
 
               <div className="flex items-center justify-center gap-3">
