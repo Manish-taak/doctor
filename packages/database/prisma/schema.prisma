@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
+
+enum AppointmentType {
+  IN_PERSON
+  VIDEO
+}
+
+enum AppointmentStatus {
+  UPCOMING
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  doctorProfile  DoctorProfile?
+  patientProfile PatientProfile?
+
+  @@map("users")
+}
+
+model DoctorProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialty       String
+  qualification   String
+  bio             String?
+  experienceYears Int      @default(0)
+  price           Float    @default(0)
+  rating          Float    @default(0)
+  reviewCount     Int      @default(0)
+  telehealth      Boolean  @default(false)
+  availableToday  Boolean  @default(false)
+  location        String
+  education       String[] @default([])
+  languages       String[] @default([])
+
+  appointments Appointment[]
+
+  @@map("doctor_profiles")
+}
+
+model PatientProfile {
+  id     String    @id @default(cuid())
+  userId String    @unique
+  user   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dob    DateTime?
+  gender String?
+  phone  String?
+
+  appointments Appointment[]
+
+  @@map("patient_profiles")
+}
+
+model Appointment {
+  id        String            @id @default(cuid())
+  patientId String
+  patient   PatientProfile    @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctorId  String
+  doctor    DoctorProfile     @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  date      DateTime
+  type      AppointmentType
+  status    AppointmentStatus @default(UPCOMING)
+  location  String
+  createdAt DateTime          @default(now())
+
+  @@map("appointments")
+}
