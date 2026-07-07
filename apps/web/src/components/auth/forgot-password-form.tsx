@@ -17,7 +17,7 @@ export function ForgotPasswordForm() {
     return (
       <Card className="ring-foreground/5 shadow-xl shadow-foreground/5">
         <CardContent className="flex flex-col items-center gap-4 text-center">
-          <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <div className="flex size-12 items-center justify-center rounded-sm bg-primary/10 text-primary">
             <Mail className="size-5" />
           </div>
           <div className="flex flex-col gap-1.5">

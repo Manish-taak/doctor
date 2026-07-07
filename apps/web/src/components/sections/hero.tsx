@@ -30,14 +30,14 @@ export function Hero() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-24 top-32 -z-10 size-72 rounded-full bg-coral/10 blur-3xl"
+        className="pointer-events-none absolute -right-24 top-32 -z-10 size-72 rounded-sm bg-coral/10 blur-3xl"
       />
 
       <Container className="grid items-center gap-16 lg:grid-cols-2">
-        <div className="flex flex-col items-start gap-6">
+        <div className="flex flex-col items-center lg:items-start gap-6">
           <Reveal>
             <Badge variant="secondary" className="gap-1.5 py-1.5 pl-1.5 pr-3">
-              <span className="flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <span className="flex size-4 items-center justify-center rounded-sm bg-primary text-primary-foreground">
                 <Star className="size-2.5 fill-current" />
               </span>
               Rated 4.9/5 by 128,000+ patients
@@ -45,20 +45,20 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <h1 className="font-heading text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl lg:text-6xl">
+            <h1 className="font-heading text-center lg:text-left text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl lg:text-6xl">
               Healthcare that fits <span className="text-primary">your</span> schedule.
             </h1>
           </Reveal>
 
           <Reveal delay={0.16}>
-            <p className="max-w-lg text-lg leading-relaxed text-balance text-muted-foreground">
+            <p className="lg:max-w-lg text-center lg:text-left text-lg leading-relaxed text-balance text-muted-foreground">
               Find a trusted doctor, book in seconds, and consult in person or over video —
               all from one calm, beautifully simple platform.
             </p>
           </Reveal>
 
           <Reveal delay={0.24} className="w-full">
-            <div className="flex w-full max-w-lg flex-col gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm sm:flex-row sm:items-center">
+            <div className="flex w-full mx-auto lg:ml-0 max-w-lg flex-col gap-2 rounded-sm border border-border bg-card p-2 shadow-sm sm:flex-row sm:items-center">
               <div className="flex flex-1 items-center gap-2.5 px-3 py-2">
                 <Search className="size-4 shrink-0 text-muted-foreground" />
                 <input
@@ -127,12 +127,12 @@ export function Hero() {
                   </div>
                 </div>
                 <Badge className="gap-1.5 bg-coral/10 text-coral">
-                  <span className="size-1.5 rounded-full bg-coral" />
+                  <span className="size-1.5 rounded-sm bg-coral" />
                   Live now
                 </Badge>
               </div>
 
-              <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-xl bg-linear-to-br from-primary/20 to-primary/5">
+              <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-sm bg-linear-to-br from-primary/20 to-primary/5">
                 <video
                   src="/videos/1107319_1080p_4k_3840x2160.mp4"
                   autoPlay
@@ -147,7 +147,7 @@ export function Hero() {
                 {[Play, Video, MapPin].map((Icon, i) => (
                   <span
                     key={i}
-                    className="flex size-9 items-center justify-center rounded-full bg-muted text-muted-foreground"
+                    className="flex size-9 items-center justify-center rounded-sm bg-muted text-muted-foreground"
                   >
                     <Icon className="size-4" />
                   </span>
@@ -159,7 +159,7 @@ export function Hero() {
           <Float className="absolute -top-6 -right-6 hidden sm:block" duration={5}>
             <Card className="ring-foreground/5 shadow-xl shadow-foreground/10">
               <CardContent className="flex items-center gap-2.5 py-2.5 pr-4">
-                <span className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <span className="flex size-8 items-center justify-center rounded-sm bg-primary/10 text-primary">
                   <CalendarCheck2 className="size-4" />
                 </span>
                 <div>

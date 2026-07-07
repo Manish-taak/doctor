@@ -52,8 +52,8 @@ export default async function PatientPaymentsPage() {
             </div>
             <div className="flex flex-col gap-3">
               {savedCards.map((card) => (
-                <div key={card.label} className="flex items-center gap-3 rounded-xl border border-border p-3">
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                <div key={card.label} className="flex items-center gap-3 rounded-sm border border-border p-3">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-sm bg-muted text-muted-foreground">
                     <CreditCard className="size-4" />
                   </div>
                   <div className="flex flex-1 flex-col gap-0.5">

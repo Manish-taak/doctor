@@ -45,7 +45,7 @@ export function DashboardTopbar({ role }: { role: UserRole }) {
         <SheetContent side="left" className="w-72">
           <SheetHeader className="border-b border-border">
             <SheetTitle className="flex items-center gap-2.5">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary/70 text-primary-foreground">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-linear-to-br from-primary to-primary/70 text-primary-foreground">
                 <Activity className="size-4.5" strokeWidth={2.5} />
               </span>
               {siteConfig.name}
@@ -57,7 +57,7 @@ export function DashboardTopbar({ role }: { role: UserRole }) {
         </SheetContent>
       </Sheet>
 
-      <div className="hidden max-w-sm flex-1 items-center gap-2.5 rounded-lg border border-border bg-muted/40 px-3 py-1.5 sm:flex">
+      <div className="hidden max-w-sm flex-1 items-center gap-2.5 rounded-sm border border-border bg-muted/40 px-3 py-1.5 sm:flex">
         <Search className="size-4 shrink-0 text-muted-foreground" />
         <input
           type="text"
@@ -101,7 +101,7 @@ export function DashboardTopbar({ role }: { role: UserRole }) {
         </DropdownMenu>
 
         <DropdownMenu>
-          <DropdownMenuTrigger render={<button className="flex items-center gap-2 rounded-full outline-none" />}>
+          <DropdownMenuTrigger render={<button className="flex items-center gap-2 rounded-sm outline-none" />}>
             <Avatar>
               <AvatarFallback className="bg-linear-to-br from-primary to-primary/60 font-semibold text-white">
                 {user.initials}

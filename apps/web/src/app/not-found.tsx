@@ -20,7 +20,7 @@ export default function NotFound() {
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-144 bg-[radial-gradient(60%_60%_at_50%_0%,color-mix(in_oklch,var(--color-primary)_12%,transparent),transparent)]"
         />
         <Container className="flex flex-col items-center gap-6 text-center">
-          <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <div className="flex size-16 items-center justify-center rounded-sm bg-primary/10 text-primary">
             <Compass className="size-7" strokeWidth={1.75} />
           </div>
           <p className="font-heading text-7xl font-semibold tracking-tight text-foreground sm:text-8xl">

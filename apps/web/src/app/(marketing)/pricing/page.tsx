@@ -84,7 +84,7 @@ export default function PricingPage() {
             </p>
           </Reveal>
 
-          <Reveal delay={0.1} className="mx-auto mt-14 max-w-4xl rounded-2xl border border-border bg-card p-2 shadow-sm sm:p-4">
+          <Reveal delay={0.1} className="mx-auto mt-14 max-w-4xl rounded-sm border border-border bg-card p-2 shadow-sm sm:p-4">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -126,7 +126,7 @@ export default function PricingPage() {
             </h2>
           </Reveal>
 
-          <Reveal delay={0.1} className="mt-12 rounded-2xl border border-border bg-card px-6 shadow-sm">
+          <Reveal delay={0.1} className="mt-12 rounded-sm border border-border bg-card px-6 shadow-sm">
             <Accordion>
               {faqs.slice(0, 4).map((faq) => (
                 <AccordionItem key={faq.id} value={faq.id}>

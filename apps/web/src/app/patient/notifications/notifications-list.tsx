@@ -50,7 +50,7 @@ export function NotificationsList({ notifications: initial }: { notifications: N
                 <CardContent className="flex items-start gap-3">
                   <div
                     className={cn(
-                      "flex size-9 shrink-0 items-center justify-center rounded-lg",
+                      "flex size-9 shrink-0 items-center justify-center rounded-sm",
                       notification.read ? "bg-muted text-muted-foreground" : "bg-primary/10 text-primary"
                     )}
                   >
@@ -59,7 +59,7 @@ export function NotificationsList({ notifications: initial }: { notifications: N
                   <div className="flex flex-1 flex-col gap-0.5">
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-medium text-foreground">{notification.title}</p>
-                      {!notification.read && <span className="size-1.5 shrink-0 rounded-full bg-primary" />}
+                      {!notification.read && <span className="size-1.5 shrink-0 rounded-sm bg-primary" />}
                     </div>
                     <p className="text-sm text-muted-foreground">{notification.description}</p>
                   </div>
