@@ -1,8 +1,8 @@
-import { Container } from "@/components/layout/container"
-import { Reveal } from "@/components/motion/reveal"
-import { StaggerGroup, StaggerItem } from "@/components/motion/stagger"
-import { Badge } from "@/components/ui/badge"
-import { steps } from "@/lib/mock/features"
+import { Container } from "@/components/layout/container";
+import { Reveal } from "@/components/motion/reveal";
+import { StaggerGroup, StaggerItem } from "@/components/motion/stagger";
+import { Badge } from "@/components/ui/badge";
+import { steps } from "@/lib/mock/features";
 
 export function HowItWorksSection() {
   return (
@@ -22,7 +22,8 @@ export function HowItWorksSection() {
           <div
             aria-hidden
             className="absolute top-1/2 right-[12.5%] left-[12.5%] hidden h-px bg-border lg:block"
-          />
+          />{" "}
+          n
           <StaggerGroup className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((step) => (
               <StaggerItem
@@ -36,7 +37,9 @@ export function HowItWorksSection() {
                   <span className="text-xs font-semibold tracking-wider text-primary uppercase">
                     Step {step.step}
                   </span>
-                  <h3 className="font-heading text-lg font-semibold text-foreground">{step.title}</h3>
+                  <h3 className="font-heading text-lg font-semibold text-foreground">
+                    {step.title}
+                  </h3>
                   <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
                     {step.description}
                   </p>
@@ -47,5 +50,5 @@ export function HowItWorksSection() {
         </div>
       </Container>
     </section>
-  )
+  );
 }

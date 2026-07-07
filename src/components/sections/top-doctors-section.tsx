@@ -1,13 +1,12 @@
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-
-import { DoctorCard } from "@/components/cards/doctor-card"
-import { Container } from "@/components/layout/container"
-import { Reveal } from "@/components/motion/reveal"
-import { StaggerGroup, StaggerItem } from "@/components/motion/stagger"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { doctors } from "@/lib/mock/doctors"
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { DoctorCard } from "@/components/cards/doctor-card";
+import { Container } from "@/components/layout/container";
+import { Reveal } from "@/components/motion/reveal";
+import { StaggerGroup, StaggerItem } from "@/components/motion/stagger";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { doctors } from "@/lib/mock/doctors";
 
 export function TopDoctorsSection() {
   return (
@@ -20,10 +19,15 @@ export function TopDoctorsSection() {
               Meet doctors patients love
             </h2>
             <p className="text-lg text-center sm:text-left  text-balance text-muted-foreground">
-              Every specialist on Vitalis is licensed, credential-verified, and rated by real patients.
+              Every specialist on Vitalis is licensed, credential-verified, and
+              rated by real patients.
             </p>
           </div>
-          <Button variant="outline" className="gap-1.5" render={<Link href="/doctors" />}>
+          <Button
+            variant="outline"
+            className="gap-1.5"
+            render={<Link href="/doctors" />}
+          >
             View all doctors <ArrowRight className="size-4" />
           </Button>
         </Reveal>
@@ -37,5 +41,5 @@ export function TopDoctorsSection() {
         </StaggerGroup>
       </Container>
     </section>
-  )
+  );
 }
