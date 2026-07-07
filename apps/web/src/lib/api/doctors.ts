@@ -2,7 +2,9 @@ import { accentForId } from "@/lib/accent"
 import { getInitials } from "@/lib/utils"
 import type { Doctor } from "@/types"
 
-import { apiFetch } from "./client"
+import { apiFetch, serverAuthHeaders } from "./client"
+
+const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"
 
 interface ApiDoctorProfile {
   id: string
@@ -55,4 +57,41 @@ export async function getDoctor(id: string): Promise<Doctor | null> {
   } catch {
     return null
   }
+}
+
+export async function getMyDoctorProfile(): Promise<Doctor> {
+  const headers = await serverAuthHeaders()
+  const doctor = await apiFetch<ApiDoctorProfile>("/doctors/me", { headers })
+  return mapDoctor(doctor)
+}
+
+export interface UpdateDoctorProfileInput {
+  bio?: string
+  experienceYears?: number
+  price?: number
+  location?: string
+  telehealth?: boolean
+  availableToday?: boolean
+  education?: string[]
+  languages?: string[]
+}
+
+// Client-safe mutation — takes the access token directly since it's called from
+// the "use client" Doctor Profile form.
+export async function updateDoctorProfile(token: string, input: UpdateDoctorProfileInput): Promise<Doctor> {
+  const response = await fetch(`${PUBLIC_API_URL}/doctors/me`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(input),
+  })
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => null)
+    throw new Error(body?.message ?? "Failed to update profile")
+  }
+
+  return mapDoctor(await response.json())
 }

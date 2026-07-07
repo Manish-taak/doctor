@@ -1,14 +1,16 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common"
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/common"
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger"
 import { createZodDto } from "nestjs-zod"
-import { createDoctorSchema } from "@doctor/validators"
+import { createDoctorSchema, updateDoctorProfileSchema } from "@doctor/validators"
 
 import { DoctorsService } from "./doctors.service"
+import { CurrentUser, type RequestUser } from "../common/current-user.decorator"
 import { JwtAuthGuard } from "../common/jwt-auth.guard"
 import { Roles } from "../common/roles.decorator"
 import { RolesGuard } from "../common/roles.guard"
 
 class CreateDoctorDto extends createZodDto(createDoctorSchema) {}
+class UpdateDoctorProfileDto extends createZodDto(updateDoctorProfileSchema) {}
 
 @ApiTags("doctors")
 @Controller("doctors")
@@ -18,6 +20,22 @@ export class DoctorsController {
   @Get()
   findAll() {
     return this.doctorsService.findAll()
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("DOCTOR")
+  @Get("me")
+  getMe(@CurrentUser() user: RequestUser) {
+    return this.doctorsService.findMe(user.id)
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("DOCTOR")
+  @Patch("me")
+  updateMe(@CurrentUser() user: RequestUser, @Body() body: UpdateDoctorProfileDto) {
+    return this.doctorsService.updateProfile(user.id, body)
   }
 
   @Get(":id")

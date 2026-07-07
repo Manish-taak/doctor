@@ -53,6 +53,18 @@ export class AuthService {
     return this.issueToken(user)
   }
 
+  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } })
+
+    const valid = await bcrypt.compare(currentPassword, user.passwordHash)
+    if (!valid) throw new UnauthorizedException("Current password is incorrect")
+
+    const passwordHash = await bcrypt.hash(newPassword, 10)
+    await this.prisma.user.update({ where: { id: userId }, data: { passwordHash } })
+
+    return { success: true }
+  }
+
   private issueToken(user: { id: string; email: string; name: string; role: string }) {
     const accessToken = this.jwt.sign({
       sub: user.id,

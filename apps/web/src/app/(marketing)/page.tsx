@@ -7,15 +7,19 @@ import { PricingSection } from "@/components/sections/pricing-section"
 import { StatsSection } from "@/components/sections/stats-section"
 import { TestimonialsSection } from "@/components/sections/testimonials-section"
 import { TopDoctorsSection } from "@/components/sections/top-doctors-section"
+import { getDoctors } from "@/lib/api/doctors"
 
-export default function Home() {
+export default async function Home() {
+  const doctors = await getDoctors()
+  const topDoctors = [...doctors].sort((a, b) => b.rating - a.rating).slice(0, 8)
+
   return (
     <>
       <Hero />
       <StatsSection />
       <FeaturesSection />
       <HowItWorksSection />
-      <TopDoctorsSection />
+      <TopDoctorsSection doctors={topDoctors} />
       <TestimonialsSection />
       <PricingSection />
       <FaqSection />

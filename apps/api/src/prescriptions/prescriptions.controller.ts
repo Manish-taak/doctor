@@ -35,4 +35,9 @@ export class PrescriptionsController {
   ) {
     return this.prescriptionsService.updateStatus(user, id, body)
   }
+
+  @Patch(":id/request-refill")
+  requestRefill(@CurrentUser() user: RequestUser, @Param("id") id: string) {
+    return this.prescriptionsService.requestRefill(user, id)
+  }
 }

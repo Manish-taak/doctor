@@ -1,7 +1,6 @@
 "use client"
 
 import { Download, FileText } from "lucide-react"
-import { toast } from "sonner"
 
 import { EmptyState } from "@/components/shared/empty-state"
 import { Badge } from "@/components/ui/badge"
@@ -15,7 +14,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { downloadTextFile } from "@/lib/files"
 import type { MedicalRecord, RecordType } from "@/types"
+
+function handleDownload(record: MedicalRecord) {
+  const content = [
+    `Record: ${record.title}`,
+    `Type: ${record.type}`,
+    `Doctor: ${record.doctorName}`,
+    `Date: ${record.date}`,
+    "",
+    "Summary:",
+    record.summary,
+  ].join("\n")
+  downloadTextFile(`${record.title.replace(/\s+/g, "-").toLowerCase()}.txt`, content)
+}
 
 const recordTypeStyles: Record<RecordType, string> = {
   "Lab Result": "bg-primary/10 text-primary",
@@ -69,7 +82,7 @@ export function RecordsTable({ records }: { records: MedicalRecord[] }) {
                     variant="ghost"
                     size="icon-sm"
                     aria-label={`Download ${record.title}`}
-                    onClick={() => toast.success(`Download started for ${record.title}`)}
+                    onClick={() => handleDownload(record)}
                   >
                     <Download className="size-4" />
                   </Button>

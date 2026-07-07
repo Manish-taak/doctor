@@ -15,6 +15,7 @@ import { NotificationsModule } from "./notifications/notifications.module"
 import { TransactionsModule } from "./transactions/transactions.module"
 import { ReviewsModule } from "./reviews/reviews.module"
 import { CategoriesModule } from "./categories/categories.module"
+import { SettingsModule } from "./settings/settings.module"
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CategoriesModule } from "./categories/categories.module"
     TransactionsModule,
     ReviewsModule,
     CategoriesModule,
+    SettingsModule,
   ],
   providers: [
     {

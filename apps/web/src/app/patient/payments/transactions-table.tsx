@@ -1,7 +1,6 @@
 "use client"
 
 import { Download } from "lucide-react"
-import { toast } from "sonner"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -13,7 +12,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { downloadTextFile } from "@/lib/files"
 import type { Transaction, TransactionStatus } from "@/types"
+
+function handleDownload(transaction: Transaction) {
+  const content = [
+    `Invoice: ${transaction.invoiceId}`,
+    `Description: ${transaction.description}`,
+    `Date: ${transaction.date}`,
+    `Method: ${transaction.method}`,
+    `Status: ${transaction.status}`,
+    `Amount: $${transaction.amount.toFixed(2)}`,
+  ].join("\n")
+  downloadTextFile(`invoice-${transaction.invoiceId}.txt`, content)
+}
 
 const statusStyles: Record<TransactionStatus, string> = {
   paid: "bg-primary/10 text-primary",
@@ -49,7 +61,7 @@ export function TransactionsTable({ transactions }: { transactions: Transaction[
                 variant="ghost"
                 size="icon-sm"
                 aria-label={`Download invoice ${transaction.invoiceId}`}
-                onClick={() => toast.success(`Download started for invoice ${transaction.invoiceId}`)}
+                onClick={() => handleDownload(transaction)}
               >
                 <Download className="size-4" />
               </Button>

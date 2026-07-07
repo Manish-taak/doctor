@@ -1,7 +1,7 @@
-import { Inject, Injectable } from "@nestjs/common"
+import { Inject, Injectable, NotFoundException } from "@nestjs/common"
 import * as bcrypt from "bcrypt"
 import type { PrismaClient } from "@doctor/database"
-import type { CreateDoctorInput } from "@doctor/validators"
+import type { CreateDoctorInput, UpdateDoctorProfileInput } from "@doctor/validators"
 
 import { PRISMA } from "../prisma/prisma.module"
 
@@ -18,6 +18,26 @@ export class DoctorsService {
   findOne(id: string) {
     return this.prisma.doctorProfile.findUnique({
       where: { id },
+      include: { user: { select: { name: true, email: true } } },
+    })
+  }
+
+  async findMe(userId: string) {
+    const doctorProfile = await this.prisma.doctorProfile.findUnique({
+      where: { userId },
+      include: { user: { select: { name: true, email: true } } },
+    })
+    if (!doctorProfile) throw new NotFoundException("Doctor profile not found")
+    return doctorProfile
+  }
+
+  async updateProfile(userId: string, input: UpdateDoctorProfileInput) {
+    const doctorProfile = await this.prisma.doctorProfile.findUnique({ where: { userId } })
+    if (!doctorProfile) throw new NotFoundException("Doctor profile not found")
+
+    return this.prisma.doctorProfile.update({
+      where: { userId },
+      data: input,
       include: { user: { select: { name: true, email: true } } },
     })
   }

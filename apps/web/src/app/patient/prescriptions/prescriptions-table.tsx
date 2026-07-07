@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 
 import { Badge } from "@/components/ui/badge"
@@ -13,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { requestRefill } from "@/lib/api/prescriptions"
 import type { Prescription, PrescriptionStatus } from "@/types"
 
 const statusStyles: Record<PrescriptionStatus, string> = {
@@ -21,7 +24,25 @@ const statusStyles: Record<PrescriptionStatus, string> = {
   expired: "bg-destructive/10 text-destructive",
 }
 
-export function PrescriptionsTable({ prescriptions }: { prescriptions: Prescription[] }) {
+export function PrescriptionsTable({ prescriptions: initial }: { prescriptions: Prescription[] }) {
+  const { data: session } = useSession()
+  const [prescriptions, setPrescriptions] = useState(initial)
+  const [requestingId, setRequestingId] = useState<string | null>(null)
+
+  const handleRefill = async (prescription: Prescription) => {
+    if (!session?.accessToken) return
+    setRequestingId(prescription.id)
+    try {
+      const updated = await requestRefill(session.accessToken, prescription.id)
+      setPrescriptions((prev) => prev.map((p) => (p.id === prescription.id ? updated : p)))
+      toast.success(`Refill requested for ${prescription.medication} — ${updated.refillsLeft} left.`)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to request refill")
+    } finally {
+      setRequestingId(null)
+    }
+  }
+
   return (
     <Card className="ring-foreground/5">
       <CardContent>
@@ -58,13 +79,10 @@ export function PrescriptionsTable({ prescriptions }: { prescriptions: Prescript
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() =>
-                        toast.success(
-                          `Refill requested for ${prescription.medication} — you'll hear back within 24 hours.`
-                        )
-                      }
+                      disabled={prescription.refillsLeft <= 0 || requestingId === prescription.id}
+                      onClick={() => handleRefill(prescription)}
                     >
-                      Request refill
+                      {prescription.refillsLeft <= 0 ? "No refills left" : "Request refill"}
                     </Button>
                   )}
                 </TableCell>

@@ -13,25 +13,48 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { appointments } from "@/lib/mock/appointments"
-import { monthlySignups, platformRevenue } from "@/lib/mock/charts"
-import { categories } from "@/lib/mock/categories"
+import { getAppointments } from "@/lib/api/appointments"
+import { getCategoriesWithIcons } from "@/lib/api/categories"
+import { getTransactions } from "@/lib/api/transactions"
+import { getUsers } from "@/lib/api/users"
+import { groupByMonth, trendFor } from "@/lib/stats"
 
 function formatCurrency(value: number) {
   return `$${value.toLocaleString("en-US")}`
 }
 
-export default function AdminAnalyticsPage() {
-  const totalRevenue = platformRevenue.reduce((sum, point) => sum + point.value, 0)
-  const totalSignups = monthlySignups.reduce((sum, point) => sum + point.value, 0)
+export default async function AdminAnalyticsPage() {
+  const [appointments, categories, transactions, users] = await Promise.all([
+    getAppointments(),
+    getCategoriesWithIcons(),
+    getTransactions(),
+    getUsers(),
+  ])
+
+  const revenueSeries = groupByMonth(
+    transactions.filter((t) => t.status === "paid"),
+    (t) => t.date,
+    (t) => t.amount
+  )
+  const signupSeries = groupByMonth(
+    users,
+    (u) => u.joinedDate,
+    () => 1
+  )
+  const totalRevenue = revenueSeries.reduce((sum, point) => sum + point.value, 0)
 
   return (
     <>
       <PageHeader title="Analytics" description="Deep dive into platform growth, revenue, and category performance." />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard label="Revenue (YTD)" value={formatCurrency(totalRevenue)} icon={Wallet} trend={{ value: "+9.4%", positive: true }} />
-        <MetricCard label="New signups (YTD)" value={totalSignups.toLocaleString("en-US")} icon={UserPlus} trend={{ value: "+14.2%", positive: true }} />
+        <MetricCard label="Revenue (YTD)" value={formatCurrency(totalRevenue)} icon={Wallet} trend={trendFor(revenueSeries)} />
+        <MetricCard
+          label="New signups (YTD)"
+          value={users.length.toLocaleString("en-US")}
+          icon={UserPlus}
+          trend={trendFor(signupSeries)}
+        />
         <MetricCard label="Appointments" value={appointments.length.toLocaleString("en-US")} icon={CalendarDays} />
         <MetricCard label="Categories" value={categories.length.toLocaleString("en-US")} icon={LayoutGrid} />
       </div>
@@ -40,14 +63,14 @@ export default function AdminAnalyticsPage() {
         <Card className="ring-foreground/5">
           <CardContent className="flex flex-col gap-4">
             <h2 className="font-heading text-base font-semibold text-foreground">Platform revenue</h2>
-            <LineChart data={platformRevenue} />
+            <LineChart data={revenueSeries} />
           </CardContent>
         </Card>
 
         <Card className="ring-foreground/5">
           <CardContent className="flex flex-col gap-4">
             <h2 className="font-heading text-base font-semibold text-foreground">Monthly signups</h2>
-            <BarChart data={monthlySignups} />
+            <BarChart data={signupSeries} />
           </CardContent>
         </Card>
       </div>

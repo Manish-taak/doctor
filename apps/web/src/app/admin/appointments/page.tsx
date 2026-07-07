@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { EmptyState } from "@/components/shared/empty-state"
 import { accentGradient } from "@/lib/accent"
-import { appointments } from "@/lib/mock/appointments"
+import { getAppointments } from "@/lib/api/appointments"
 import { cn } from "@/lib/utils"
 import type { Appointment, AppointmentStatus } from "@/types"
 
@@ -98,7 +98,9 @@ function AppointmentsTable({ items }: { items: Appointment[] }) {
   )
 }
 
-export default function AdminAppointmentsPage() {
+export default async function AdminAppointmentsPage() {
+  const appointments = await getAppointments()
+
   return (
     <>
       <PageHeader title="Appointments" description="Every appointment booked across the Vitalis platform." />

@@ -1,4 +1,4 @@
-import { ForbiddenException, Inject, Injectable, NotFoundException } from "@nestjs/common"
+import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from "@nestjs/common"
 import type { PrismaClient } from "@doctor/database"
 import type { CreatePrescriptionInput, UpdatePrescriptionInput } from "@doctor/validators"
 
@@ -66,5 +66,28 @@ export class PrescriptionsService {
     if (!isOwner) throw new ForbiddenException("You cannot modify this prescription")
 
     return this.prisma.prescription.update({ where: { id }, data: { status: input.status } })
+  }
+
+  async requestRefill(user: RequestUser, id: string) {
+    const patientProfile = await this.prisma.patientProfile.findUnique({ where: { userId: user.id } })
+    if (!patientProfile) throw new ForbiddenException("Only patients can request refills")
+
+    const prescription = await this.prisma.prescription.findUnique({ where: { id } })
+    if (!prescription) throw new NotFoundException("Prescription not found")
+    if (prescription.patientId !== patientProfile.id) {
+      throw new ForbiddenException("You cannot request a refill for this prescription")
+    }
+    if (prescription.status !== "ACTIVE") {
+      throw new BadRequestException("Only active prescriptions can be refilled")
+    }
+    if (prescription.refillsLeft <= 0) {
+      throw new BadRequestException("No refills remaining — contact your doctor for a new prescription")
+    }
+
+    return this.prisma.prescription.update({
+      where: { id },
+      data: { refillsLeft: { decrement: 1 } },
+      include: { doctor: { include: { user: true } } },
+    })
   }
 }

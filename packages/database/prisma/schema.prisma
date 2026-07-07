@@ -104,6 +104,11 @@ model PatientProfile {
   gender String?
   phone  String?
 
+  insuranceProvider     String?
+  insurancePolicyNumber String?
+  insuranceGroupNumber  String?
+  insuranceValidThrough DateTime?
+
   appointments   Appointment[]
   medicalRecords MedicalRecord[]
   prescriptions  Prescription[]
@@ -235,4 +240,15 @@ model Category {
   doctors DoctorProfile[]
 
   @@map("categories")
+}
+
+model PlatformSettings {
+  id                    String   @id @default(cuid())
+  platformName          String   @default("Vitalis")
+  supportEmail          String   @default("support@vitalis.health")
+  enforce2fa            Boolean  @default(false)
+  sessionTimeoutMinutes Int      @default(30)
+  updatedAt             DateTime @updatedAt
+
+  @@map("platform_settings")
 }

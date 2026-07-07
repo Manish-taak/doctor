@@ -165,7 +165,13 @@ export default async function DoctorProfilePage({
 
             <div className="lg:col-span-1">
               <div className="sticky top-24">
-                <BookingPanel doctorName={doctor.name} price={doctor.price} telehealth={doctor.telehealth} />
+                <BookingPanel
+                  doctorId={doctor.id}
+                  doctorName={doctor.name}
+                  price={doctor.price}
+                  telehealth={doctor.telehealth}
+                  location={doctor.location}
+                />
               </div>
             </div>
           </Reveal>

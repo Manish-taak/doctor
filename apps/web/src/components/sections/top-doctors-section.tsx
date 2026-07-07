@@ -7,9 +7,9 @@ import { Reveal } from "@/components/motion/reveal"
 import { StaggerGroup, StaggerItem } from "@/components/motion/stagger"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { doctors } from "@/lib/mock/doctors"
+import type { Doctor } from "@/types"
 
-export function TopDoctorsSection() {
+export function TopDoctorsSection({ doctors }: { doctors: Doctor[] }) {
   return (
     <section className="py-24 sm:py-32">
       <Container>

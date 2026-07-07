@@ -17,7 +17,7 @@ import { getDoctors } from "@/lib/api/doctors"
 import { getNotifications } from "@/lib/api/notifications"
 import { getPrescriptions } from "@/lib/api/prescriptions"
 import { auth } from "@/lib/auth"
-import { weeklyVisits } from "@/lib/mock/charts"
+import { weeklyCounts } from "@/lib/stats"
 import { cn } from "@/lib/utils"
 
 export default async function PatientDashboardPage() {
@@ -35,6 +35,7 @@ export default async function PatientDashboardPage() {
   const activePrescriptions = prescriptions.filter((p) => p.status === "active")
   const myDoctors = doctors.slice(0, 4)
   const unreadMessages = conversations.reduce((sum, c) => sum + c.unreadCount, 0)
+  const weeklyVisits = weeklyCounts(appointments, (a) => a.date)
 
   return (
     <>

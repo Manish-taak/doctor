@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { MetricCard } from "@/components/shared/metric-card"
-import { transactions } from "@/lib/mock/payments"
+import { getTransactions } from "@/lib/api/transactions"
 import { cn } from "@/lib/utils"
 import type { TransactionStatus } from "@/types"
 
@@ -26,7 +26,8 @@ function formatCurrency(value: number) {
   return `$${value.toLocaleString("en-US")}`
 }
 
-export default function AdminPaymentsPage() {
+export default async function AdminPaymentsPage() {
+  const transactions = await getTransactions()
   const totalProcessed = transactions.filter((t) => t.status === "paid").reduce((sum, t) => sum + t.amount, 0)
   const pendingPayouts = transactions.filter((t) => t.status === "pending").reduce((sum, t) => sum + t.amount, 0)
   const refunds = transactions.filter((t) => t.status === "failed").reduce((sum, t) => sum + t.amount, 0)

@@ -1,40 +1,71 @@
-import {
-  AlertTriangle,
-  CalendarDays,
-  CreditCard,
-  ShieldCheck,
-  Stethoscope,
-  UserPlus,
-  Users,
-  Wallet,
-} from "lucide-react"
+import { CalendarDays, CreditCard, Stethoscope, UserPlus, Users, Wallet } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
+import { formatDistanceToNow } from "date-fns"
 
 import { BarChart } from "@/components/charts/bar-chart"
 import { LineChart } from "@/components/charts/line-chart"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { MetricCard } from "@/components/shared/metric-card"
 import { Card, CardContent } from "@/components/ui/card"
-import { appointments } from "@/lib/mock/appointments"
-import { monthlySignups, platformRevenue } from "@/lib/mock/charts"
-import { doctors } from "@/lib/mock/doctors"
-import { platformUsers } from "@/lib/mock/users"
+import { getAppointments } from "@/lib/api/appointments"
+import { getDoctors } from "@/lib/api/doctors"
+import { getTransactions } from "@/lib/api/transactions"
+import { getUsers } from "@/lib/api/users"
+import { groupByMonth, trendFor } from "@/lib/stats"
 
-const activityFeed: { icon: LucideIcon; text: string; time: string }[] = [
-  { icon: UserPlus, text: "142 new patients signed up today", time: "2 hours ago" },
-  { icon: ShieldCheck, text: "New doctor approved: Dr. Ryo Tanaka", time: "5 hours ago" },
-  { icon: AlertTriangle, text: "Account suspended: Tom Walker", time: "Yesterday" },
-  { icon: CreditCard, text: "Payout processed: $18,400 to providers", time: "Yesterday" },
-  { icon: CalendarDays, text: "312 appointments booked this week", time: "2 days ago" },
-]
+interface ActivityItem {
+  icon: LucideIcon
+  text: string
+  date: Date
+}
 
 function formatCurrency(value: number) {
   return `$${value.toLocaleString("en-US")}`
 }
 
-export default function AdminDashboardPage() {
-  const appointmentsThisMonth = appointments.filter((a) => a.date.startsWith("2026-07")).length
-  const latestRevenue = platformRevenue[platformRevenue.length - 1]?.value ?? 0
+export default async function AdminDashboardPage() {
+  const [users, doctors, appointments, transactions] = await Promise.all([
+    getUsers(),
+    getDoctors(),
+    getAppointments(),
+    getTransactions(),
+  ])
+
+  const now = new Date()
+  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
+  const appointmentsThisMonth = appointments.filter((a) => a.date.startsWith(currentMonthKey)).length
+
+  const revenueSeries = groupByMonth(
+    transactions.filter((t) => t.status === "paid"),
+    (t) => t.date,
+    (t) => t.amount
+  )
+  const signupSeries = groupByMonth(
+    users,
+    (u) => u.joinedDate,
+    () => 1
+  )
+  const latestRevenue = revenueSeries[revenueSeries.length - 1]?.value ?? 0
+
+  const activityFeed: ActivityItem[] = [
+    ...users.slice(0, 3).map((u) => ({
+      icon: UserPlus,
+      text: `${u.name} signed up as a ${u.role}`,
+      date: new Date(u.joinedDate),
+    })),
+    ...appointments.slice(0, 3).map((a) => ({
+      icon: CalendarDays,
+      text: `${a.patientName} booked with ${a.doctorName}`,
+      date: new Date(a.date),
+    })),
+    ...transactions.slice(0, 3).map((t) => ({
+      icon: CreditCard,
+      text: `${t.description} — ${formatCurrency(t.amount)}`,
+      date: new Date(t.date),
+    })),
+  ]
+    .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .slice(0, 5)
 
   return (
     <>
@@ -46,18 +77,22 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           label="Total users"
-          value={platformUsers.length.toLocaleString("en-US")}
+          value={users.length.toLocaleString("en-US")}
           icon={Users}
-          trend={{ value: "+12% this month", positive: true }}
+          trend={trendFor(signupSeries)}
         />
         <MetricCard label="Total doctors" value={doctors.length.toLocaleString("en-US")} icon={Stethoscope} />
         <MetricCard
           label="Appointments this month"
           value={appointmentsThisMonth.toLocaleString("en-US")}
           icon={CalendarDays}
-          trend={{ value: "+8% vs last month", positive: true }}
         />
-        <MetricCard label="Platform revenue" value={formatCurrency(latestRevenue)} icon={Wallet} />
+        <MetricCard
+          label="Platform revenue"
+          value={formatCurrency(latestRevenue)}
+          icon={Wallet}
+          trend={trendFor(revenueSeries)}
+        />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -65,14 +100,14 @@ export default function AdminDashboardPage() {
           <Card className="ring-foreground/5">
             <CardContent className="flex flex-col gap-4">
               <h2 className="font-heading text-base font-semibold text-foreground">Platform revenue</h2>
-              <LineChart data={platformRevenue} />
+              <LineChart data={revenueSeries} />
             </CardContent>
           </Card>
 
           <Card className="ring-foreground/5">
             <CardContent className="flex flex-col gap-4">
               <h2 className="font-heading text-base font-semibold text-foreground">New signups</h2>
-              <BarChart data={monthlySignups} />
+              <BarChart data={signupSeries} />
             </CardContent>
           </Card>
         </div>
@@ -81,19 +116,25 @@ export default function AdminDashboardPage() {
           <Card className="ring-foreground/5">
             <CardContent className="flex flex-col gap-4">
               <h2 className="font-heading text-base font-semibold text-foreground">Recent activity</h2>
-              <div className="flex flex-col gap-4">
-                {activityFeed.map((activity, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                      <activity.icon className="size-4" strokeWidth={2} />
+              {activityFeed.length > 0 ? (
+                <div className="flex flex-col gap-4">
+                  {activityFeed.map((activity, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <activity.icon className="size-4" strokeWidth={2} />
+                      </div>
+                      <div className="flex flex-col gap-0.5">
+                        <p className="text-sm font-medium text-foreground">{activity.text}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatDistanceToNow(activity.date, { addSuffix: true })}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-0.5">
-                      <p className="text-sm font-medium text-foreground">{activity.text}</p>
-                      <p className="text-xs text-muted-foreground">{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">No recent activity yet.</p>
+              )}
             </CardContent>
           </Card>
         </div>

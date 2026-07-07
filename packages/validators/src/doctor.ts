@@ -15,3 +15,15 @@ export const createDoctorSchema = z.object({
   languages: z.array(z.string()).default([]),
 })
 export type CreateDoctorInput = z.infer<typeof createDoctorSchema>
+
+export const updateDoctorProfileSchema = z.object({
+  bio: z.string().trim().optional(),
+  experienceYears: z.number().int().min(0).optional(),
+  price: z.number().min(0).optional(),
+  location: z.string().trim().min(1).optional(),
+  telehealth: z.boolean().optional(),
+  availableToday: z.boolean().optional(),
+  education: z.array(z.string()).optional(),
+  languages: z.array(z.string()).optional(),
+})
+export type UpdateDoctorProfileInput = z.infer<typeof updateDoctorProfileSchema>
