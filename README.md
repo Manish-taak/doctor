@@ -1,119 +1,149 @@
 # Vitalis — Doctor Appointment SaaS
 
-A premium, UI-only doctor-appointment SaaS demo built with Next.js 16, TypeScript, Tailwind CSS v4, shadcn/ui, and Framer Motion. Every screen — public marketing site, patient dashboard, doctor dashboard, admin dashboard — is fully designed and interactive, running entirely on mock data.
+A full-stack doctor-appointment SaaS: a Next.js 16 frontend (public site + patient/doctor/admin dashboards) backed by a real NestJS + Prisma + PostgreSQL API with JWT auth, Zod validation, and Swagger docs. Organized as an npm workspaces monorepo.
 
-> **This is a frontend-only prototype.** There is no backend, no database, and no real authentication. See [Current limitations](#current-limitations) and [Adding a real backend](#adding-a-real-backend) below.
+> **Where things stand:** Auth, users, doctors, appointments, medical records, prescriptions, messaging, notifications, payments, reviews, and categories are all real — modeled in Postgres and served through a working REST API (see [What's real vs. still mock](#whats-real-vs-still-mock)). The dashboard *pages* still render from mock data in `apps/web/src/lib/mock/*`; wiring each page to the live API is the next phase.
 
 ## Tech stack
 
-- **Framework:** Next.js 16 (App Router, Turbopack, React Compiler)
-- **Language:** TypeScript (strict)
-- **Styling:** Tailwind CSS v4
-- **Components:** shadcn/ui, built on [Base UI](https://base-ui.com) (not Radix)
-- **Icons:** lucide-react
-- **Animation:** Framer Motion
-- **Theme:** next-themes (light/dark, toggle in navbar and dashboard topbar)
-- **Toasts:** sonner
+**Frontend** (`apps/web`)
+- Next.js 16 (App Router, Turbopack, React Compiler)
+- TypeScript (strict), Tailwind CSS v4
+- shadcn/ui on [Base UI](https://base-ui.com) (not Radix), lucide-react, Framer Motion
+- NextAuth (Auth.js v5) for sessions, React Hook Form + Zod for forms
+- next-themes, sonner
 
-## Getting started
+**Backend** (`apps/api`)
+- NestJS 11, Prisma 6, PostgreSQL
+- JWT auth (`@nestjs/jwt` + Passport), role-based guards
+- Zod validation end-to-end via `nestjs-zod` (same schemas power Swagger docs)
+- Swagger/OpenAPI at `/docs`
 
-```bash
-npm install
-npm run dev
-```
+**Shared** (`packages/*`)
+- `@doctor/database` — Prisma schema + generated client
+- `@doctor/validators` — Zod schemas shared by the API (validation) and the frontend (form resolvers)
 
-Open [http://localhost:3000](http://localhost:3000).
+## Prerequisites
 
-Other scripts: `npm run build`, `npm run start`, `npm run lint`.
+- Node.js 20+
+- A local PostgreSQL server running (no Docker required — any Postgres install works: native, Homebrew, etc.)
+
+## Getting started (fresh clone)
+
+1. **Create a database.** Using `psql` or any GUI (pgAdmin, TablePlus, etc.):
+   ```sql
+   CREATE DATABASE doctor;
+   ```
+
+2. **Set up environment files.** Copy the values from `.env.example` into three new files, adjusting the connection string to match your local Postgres user/password/port:
+   - `packages/database/.env` — needs `DATABASE_URL`
+   - `apps/api/.env` — needs `DATABASE_URL`, `PORT`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CORS_ORIGIN`
+   - `apps/web/.env.local` — needs `AUTH_SECRET`, `NEXTAUTH_URL`, `API_URL`, `NEXT_PUBLIC_API_URL`
+
+3. **Install dependencies** from the repo root:
+   ```bash
+   npm install
+   ```
+   This also auto-generates the Prisma client and builds `packages/validators`/`packages/database` via a `postinstall` hook — no separate build step needed.
+
+4. **Run migrations** (creates all tables):
+   ```bash
+   npm run db:migrate
+   ```
+
+5. **Seed demo data** (optional but recommended — creates an admin, a doctor, and a patient account):
+   ```bash
+   npm run db:seed
+   ```
+   All seeded accounts use password `password123`:
+   - `admin@vitalis.health` (admin)
+   - `amara.chen@vitalis.health` (doctor)
+   - `james.hale@example.com` (patient)
+
+6. **Start both apps:**
+   ```bash
+   npm run dev
+   ```
+   Or individually: `npm run dev:web` / `npm run dev:api`.
+
+   - Frontend: [http://localhost:3000](http://localhost:3000)
+   - API + Swagger docs: [http://localhost:4000/docs](http://localhost:4000/docs)
+
+Other root scripts: `npm run build`, `npm run lint`, `npm run db:studio` (Prisma Studio — a GUI for browsing data).
 
 ## Project structure
 
 ```
-src/
-  app/
-    (marketing)/        public site — shares Navbar + Footer layout
-    patient/             patient dashboard — own sidebar/topbar shell
-    doctor/               doctor dashboard — own sidebar/topbar shell
-    admin/                 admin dashboard — own sidebar/topbar shell
-    login/, signup/, forgot-password/   standalone auth screens (UI only)
-  components/
-    ui/                shadcn/ui primitives
-    layout/             Navbar, Footer, Logo, MobileNav, Container
-    dashboard/           Sidebar, Topbar, PageHeader, nav config
-    cards/               DoctorCard, AppointmentCard, ReviewCard, PricingCard, etc.
-    sections/           landing-page section compositions (Hero, Stats, FAQ, etc.)
-    charts/               lightweight custom BarChart / LineChart (no charting library)
-    motion/              Reveal, StaggerGroup, Float, PageTransition, CountUp
-    auth/                 login/signup/forgot-password forms
-  lib/
-    mock/                 all mock data — doctors, patients, appointments, messages, etc.
-    site-config.ts, dashboard-nav.ts, accent.ts, utils.ts
-  types/                  shared TypeScript interfaces for every data shape
+apps/
+  web/                          Next.js frontend
+    src/app/
+      (marketing)/               public site — shared Navbar + Footer
+      patient/, doctor/, admin/   dashboards — own sidebar/topbar shell each
+      login/, signup/, forgot-password/   auth screens
+      proxy.ts                    route protection (Next.js 16's renamed "middleware")
+    src/lib/auth.ts               NextAuth config (Credentials provider → calls the NestJS API)
+    src/lib/mock/                 mock data still used by most dashboard pages (see below)
+  api/                           NestJS backend
+    src/
+      auth/                       register, login, /me, JWT strategy + guards
+      users/, doctors/, appointments/
+      medical-records/, prescriptions/, conversations/, notifications/, transactions/, reviews/, categories/
+      prisma/                     Prisma client DI token
+      common/                     role guard, current-user decorator, JWT guard
+packages/
+  database/
+    prisma/schema.prisma          12 models — see below
+    prisma/seed.ts
+  validators/
+    src/                          Zod schemas per resource (auth, doctor, appointment, review, etc.)
 ```
 
-## Routes
+## Database schema
 
-### Public site (`(marketing)` group — shared Navbar/Footer)
-`/`, `/about`, `/services`, `/doctors` (find doctors), `/doctors/[id]` (doctor profile), `/pricing`, `/contact`, `/faq`
+`packages/database/prisma/schema.prisma` — `User` (with `Role`: PATIENT/DOCTOR/ADMIN), `DoctorProfile`, `PatientProfile`, `Appointment`, `MedicalRecord`, `Prescription`, `Conversation`, `Message`, `Notification`, `Transaction`, `Review`, `Category`, all with real foreign-key relations.
 
-### Auth (standalone, no Navbar/Footer)
-`/login`, `/signup`, `/forgot-password`
+## API reference
 
-### Patient dashboard (`/patient/*`)
-`/patient`, `/patient/appointments`, `/patient/doctors`, `/patient/records`, `/patient/prescriptions`, `/patient/payments`, `/patient/notifications`, `/patient/messages`, `/patient/settings`, `/patient/profile`
+Full interactive docs (with request/response schemas and a "Try it out" button) live at `/docs` once `apps/api` is running. Endpoint summary:
 
-### Doctor dashboard (`/doctor/*`)
-`/doctor`, `/doctor/calendar`, `/doctor/appointments`, `/doctor/patients`, `/doctor/reviews`, `/doctor/earnings`, `/doctor/analytics`, `/doctor/messages`, `/doctor/notifications`, `/doctor/profile`, `/doctor/settings`
+| Resource | Endpoints |
+|---|---|
+| Auth | `POST /auth/register`, `POST /auth/login`, `GET /auth/me` |
+| Users | `GET /users` (admin only) |
+| Doctors | `GET /doctors`, `GET /doctors/:id`, `POST /doctors` (admin only) |
+| Appointments | `GET/POST /appointments`, `PATCH /appointments/:id` (role-scoped) |
+| Medical Records | `GET/POST /medical-records` (role-scoped) |
+| Prescriptions | `GET/POST /prescriptions`, `PATCH /prescriptions/:id` |
+| Conversations/Messages | `GET/POST /conversations`, `GET/POST /conversations/:id/messages` |
+| Notifications | `GET /notifications`, `PATCH /notifications/:id/read`, `PATCH /notifications/read-all` |
+| Transactions | `GET /transactions`, `POST/PATCH` (admin only) |
+| Reviews | `GET /reviews?doctorId=...` (public), `POST /reviews` (patient only) |
+| Categories | `GET /categories` (public, with live-computed doctor/appointment counts), `POST` (admin only) |
 
-### Admin dashboard (`/admin/*`)
-`/admin`, `/admin/users`, `/admin/doctors`, `/admin/appointments`, `/admin/categories`, `/admin/analytics`, `/admin/reports`, `/admin/payments`, `/admin/settings`
+Auth: send `Authorization: Bearer <token>` (the JWT returned from `/auth/login` or `/auth/register`). Role-gated endpoints return 403 for the wrong role.
 
-## What each role can do (in the current UI)
+## What's real vs. still mock
 
-**Patient**
-- View and book appointments (upcoming / completed / cancelled)
-- Browse "My Doctors" and the public doctor directory
-- View medical records and prescriptions (request a refill)
-- View payment/billing history
-- Message doctors, view notifications
-- Edit profile and settings
+**Real (backed by Postgres, tested end-to-end):**
+- Registration, login, JWT sessions, role-based route protection (`/patient`, `/doctor`, `/admin` actually check who's logged in now)
+- Every API resource listed above — real relations (an appointment really links a patient row to a doctor row)
 
-**Doctor**
-- Dashboard overview: today's schedule, patient count, earnings, rating
-- Manage own appointments and a calendar view
-- View patient roster and per-patient detail
-- View reviews and ratings breakdown
-- View earnings and revenue trends
-- Message patients, view notifications
-- Edit profile and availability settings
+**Still mock (frontend dashboard pages haven't been rewired yet):**
+- Patient/Doctor/Admin dashboard *pages* still import from `apps/web/src/lib/mock/*` rather than calling the live API
+- Actions like Save, Approve, Suspend, Request refill still just show a toast — the underlying API endpoint exists (see table above) but isn't called yet from the UI
 
-**Admin**
-- Platform-wide dashboard: total users, doctors, appointments, revenue
-- Manage all users (search/filter, edit/suspend/delete)
-- Approve/suspend doctors
-- View every appointment across the platform
-- Manage specialty categories
-- View platform analytics, generate/download reports
-- View all transactions platform-wide
-- Configure platform settings (security, billing, integrations)
+## What each role can do
 
-## Current limitations
+**Patient** — book/view appointments, browse doctors, view medical records & prescriptions, view billing history, message doctors, notifications, profile/settings.
 
-- **No auth gating.** `/patient`, `/doctor`, and `/admin` are all publicly reachable by URL — there's no session/role check. Login and signup only redirect to a chosen dashboard; they don't create or verify an account.
-- **No shared data model.** Each role's mock data (`src/lib/mock/*`) is independent — a patient in the Admin "Users" table isn't linked to a record in `patients.ts`, and an appointment isn't a real foreign-key relationship between a patient and a doctor.
-- **No persistence.** Actions that look like they save something (Edit, Save, Approve, Suspend, Delete, Request refill, Add category) show a toast for feedback but don't write anywhere.
-- **Decorative video/media.** The hero's "video call" clip is a static asset, not a live video call.
+**Doctor** — dashboard overview (schedule, patients, earnings, rating), manage appointments & calendar, patient roster, reviews, earnings, message patients, profile/settings.
 
-## Adding a real backend
+**Admin** — platform-wide dashboard, manage all users, approve/suspend doctors, view every appointment, manage categories, analytics/reports, all transactions, platform settings.
 
-To turn this into a working product, in rough order of priority:
+## Roadmap
 
-1. **Auth & authorization** — real sign-up/login (e.g. NextAuth/Auth.js or a custom JWT/session flow) plus route protection (`middleware.ts`) so `/admin/*`, `/doctor/*`, `/patient/*` actually check the caller's role.
-2. **Database & schema** — replace `src/lib/mock/*` with real tables (Postgres/MySQL via Prisma or Drizzle): `users`, `doctors`, `patients`, `appointments`, `prescriptions`, `medical_records`, `conversations`/`messages`, `transactions`, `categories`, `reviews` — with real foreign keys between them (an appointment references a real `patient_id` and `doctor_id`).
-3. **API layer** — Next.js Route Handlers (or a separate service) for every mutating action currently faked with a toast: book/cancel an appointment, send a message, approve/suspend a doctor, process a refund, etc.
-4. **Payments** — Stripe or Razorpay integration for real billing instead of the static `transactions` mock.
-5. **Real-time features** — WebSockets or polling for live messages/notifications instead of static arrays.
-6. **Video consultations** — Twilio/WebRTC (or similar) if telehealth video visits need to be real.
-7. **File storage** — S3 or similar for medical record uploads.
-
-The upside of the current setup: the entire frontend, every screen, and the full UX flow for all three roles is already built. Wiring a backend in mostly means swapping the mock-data imports in each page for real data-fetching (`fetch`/server actions/React Query), not redesigning the UI.
+1. Rewire each dashboard page to call the real API instead of `lib/mock/*` (React Query or server components + `fetch`)
+2. Real payments (Stripe/Razorpay) instead of the `Transaction` model being admin-entered
+3. Real-time messaging/notifications (WebSockets instead of polling)
+4. Video consultations (Twilio/WebRTC) if telehealth needs to be real
+5. File storage (S3 or similar) for medical record uploads

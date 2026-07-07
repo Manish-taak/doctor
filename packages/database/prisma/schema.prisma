@@ -24,6 +24,32 @@ enum AppointmentStatus {
   CANCELLED
 }
 
+enum RecordType {
+  LAB_RESULT
+  PRESCRIPTION
+  VISIT_SUMMARY
+  IMAGING
+}
+
+enum PrescriptionStatus {
+  ACTIVE
+  COMPLETED
+  EXPIRED
+}
+
+enum NotificationType {
+  APPOINTMENT
+  MESSAGE
+  PAYMENT
+  SYSTEM
+}
+
+enum TransactionStatus {
+  PAID
+  PENDING
+  FAILED
+}
+
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -35,6 +61,8 @@ model User {
 
   doctorProfile  DoctorProfile?
   patientProfile PatientProfile?
+  messages       Message[]
+  notifications  Notification[]
 
   @@map("users")
 }
@@ -56,7 +84,14 @@ model DoctorProfile {
   education       String[] @default([])
   languages       String[] @default([])
 
-  appointments Appointment[]
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  appointments  Appointment[]
+  medicalRecord MedicalRecord[]
+  prescriptions Prescription[]
+  reviews       Review[]
+  conversations Conversation[]
 
   @@map("doctor_profiles")
 }
@@ -69,7 +104,12 @@ model PatientProfile {
   gender String?
   phone  String?
 
-  appointments Appointment[]
+  appointments   Appointment[]
+  medicalRecords MedicalRecord[]
+  prescriptions  Prescription[]
+  transactions   Transaction[]
+  reviews        Review[]
+  conversations  Conversation[]
 
   @@map("patient_profiles")
 }
@@ -87,4 +127,112 @@ model Appointment {
   createdAt DateTime          @default(now())
 
   @@map("appointments")
+}
+
+model MedicalRecord {
+  id        String         @id @default(cuid())
+  patientId String
+  patient   PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctorId  String
+  doctor    DoctorProfile  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  title     String
+  type      RecordType
+  date      DateTime       @default(now())
+  fileSize  String
+  summary   String
+
+  @@map("medical_records")
+}
+
+model Prescription {
+  id          String             @id @default(cuid())
+  patientId   String
+  patient     PatientProfile     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctorId    String
+  doctor      DoctorProfile      @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  medication  String
+  dosage      String
+  frequency   String
+  date        DateTime           @default(now())
+  status      PrescriptionStatus @default(ACTIVE)
+  refillsLeft Int                @default(0)
+
+  @@map("prescriptions")
+}
+
+model Conversation {
+  id        String         @id @default(cuid())
+  patientId String
+  patient   PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctorId  String
+  doctor    DoctorProfile  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  createdAt DateTime       @default(now())
+
+  messages Message[]
+
+  @@unique([patientId, doctorId])
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  text           String
+  read           Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+
+  @@map("messages")
+}
+
+model Notification {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        NotificationType
+  title       String
+  description String
+  read        Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+
+  @@map("notifications")
+}
+
+model Transaction {
+  id          String            @id @default(cuid())
+  patientId   String
+  patient     PatientProfile    @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  description String
+  amount      Float
+  status      TransactionStatus @default(PENDING)
+  method      String
+  invoiceId   String            @unique
+  date        DateTime          @default(now())
+
+  @@map("transactions")
+}
+
+model Review {
+  id        String         @id @default(cuid())
+  doctorId  String
+  doctor    DoctorProfile  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  patientId String
+  patient   PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String
+  date      DateTime       @default(now())
+
+  @@map("reviews")
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String @unique
+  icon String
+
+  doctors DoctorProfile[]
+
+  @@map("categories")
 }

@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "npm run db:generate && npm run build -w packages/validators && npm run build -w packages/database",
     "dev:web": "npm run dev -w apps/web",
     "dev:api": "npm run dev -w apps/api",
     "dev": "concurrently -n web,api -c blue,green \"npm:dev:web\" \"npm:dev:api\"",
@@ -14,6 +15,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "db:generate": "npm run generate -w packages/database",
     "db:migrate": "npm run migrate -w packages/database",
+    "db:seed": "npm run seed -w packages/database",
     "db:studio": "npm run studio -w packages/database"
   },
   "devDependencies": {

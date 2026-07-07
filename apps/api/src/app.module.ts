@@ -8,6 +8,13 @@ import { AuthModule } from "./auth/auth.module"
 import { UsersModule } from "./users/users.module"
 import { DoctorsModule } from "./doctors/doctors.module"
 import { AppointmentsModule } from "./appointments/appointments.module"
+import { MedicalRecordsModule } from "./medical-records/medical-records.module"
+import { PrescriptionsModule } from "./prescriptions/prescriptions.module"
+import { ConversationsModule } from "./conversations/conversations.module"
+import { NotificationsModule } from "./notifications/notifications.module"
+import { TransactionsModule } from "./transactions/transactions.module"
+import { ReviewsModule } from "./reviews/reviews.module"
+import { CategoriesModule } from "./categories/categories.module"
 
 @Module({
   imports: [
@@ -17,6 +24,13 @@ import { AppointmentsModule } from "./appointments/appointments.module"
     UsersModule,
     DoctorsModule,
     AppointmentsModule,
+    MedicalRecordsModule,
+    PrescriptionsModule,
+    ConversationsModule,
+    NotificationsModule,
+    TransactionsModule,
+    ReviewsModule,
+    CategoriesModule,
   ],
   providers: [
     {
