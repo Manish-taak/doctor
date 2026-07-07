@@ -17,28 +17,11 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { accentGradient } from "@/lib/accent"
-import { doctors } from "@/lib/mock/doctors"
-import { reviews } from "@/lib/mock/reviews"
+import { getDoctor, getDoctors } from "@/lib/api/doctors"
+import { getReviews } from "@/lib/api/reviews"
 import { cn } from "@/lib/utils"
 import type { Testimonial } from "@/types"
 import { BookingPanel } from "./booking-panel"
-
-const doctorTestimonials: Testimonial[] = reviews.map((review) => ({
-  id: review.id,
-  name: review.patientName,
-  role: new Date(review.date).toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  }),
-  quote: review.comment,
-  rating: review.rating,
-  initials: review.patientInitials,
-  accent: review.accent,
-}))
-
-export function generateStaticParams() {
-  return doctors.map((doctor) => ({ id: doctor.id }))
-}
 
 export default async function DoctorProfilePage({
   params,
@@ -46,11 +29,24 @@ export default async function DoctorProfilePage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const doctor = doctors.find((d) => d.id === id)
+  const [doctor, reviews, doctors] = await Promise.all([getDoctor(id), getReviews(id), getDoctors()])
 
   if (!doctor) {
     notFound()
   }
+
+  const doctorTestimonials: Testimonial[] = reviews.map((review) => ({
+    id: review.id,
+    name: review.patientName,
+    role: new Date(review.date).toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric",
+    }),
+    quote: review.comment,
+    rating: review.rating,
+    initials: review.patientInitials,
+    accent: review.accent,
+  }))
 
   const relatedDoctors = doctors
     .filter((d) => d.id !== doctor.id && d.specialty === doctor.specialty)
@@ -153,13 +149,17 @@ export default async function DoctorProfilePage({
                 <h2 className="font-heading text-xl font-semibold text-foreground">
                   Patient reviews
                 </h2>
-                <StaggerGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  {doctorTestimonials.map((testimonial) => (
-                    <StaggerItem key={testimonial.id}>
-                      <ReviewCard testimonial={testimonial} />
-                    </StaggerItem>
-                  ))}
-                </StaggerGroup>
+                {doctorTestimonials.length > 0 ? (
+                  <StaggerGroup className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    {doctorTestimonials.map((testimonial) => (
+                      <StaggerItem key={testimonial.id}>
+                        <ReviewCard testimonial={testimonial} />
+                      </StaggerItem>
+                    ))}
+                  </StaggerGroup>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No reviews yet for this doctor.</p>
+                )}
               </div>
             </div>
 

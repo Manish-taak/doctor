@@ -1,10 +1,13 @@
 import { Container } from "@/components/layout/container"
 import { Reveal } from "@/components/motion/reveal"
 import { Badge } from "@/components/ui/badge"
+import { getDoctors } from "@/lib/api/doctors"
 
 import { DoctorDirectory } from "./doctor-directory"
 
-export default function DoctorsPage() {
+export default async function DoctorsPage() {
+  const doctors = await getDoctors()
+
   return (
     <>
       <section className="relative overflow-hidden pt-20 pb-16 sm:pt-28 sm:pb-20">
@@ -32,7 +35,7 @@ export default function DoctorsPage() {
 
       <section className="pb-24 sm:pb-32">
         <Container>
-          <DoctorDirectory />
+          <DoctorDirectory doctors={doctors} />
         </Container>
       </section>
     </>

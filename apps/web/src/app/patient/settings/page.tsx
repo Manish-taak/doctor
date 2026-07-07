@@ -1,5 +1,6 @@
 "use client"
 
+import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 
 import { PageHeader } from "@/components/dashboard/page-header"
@@ -10,10 +11,10 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { dashboardCurrentUser } from "@/lib/dashboard-nav"
 
 export default function PatientSettingsPage() {
-  const user = dashboardCurrentUser.patient
+  const { data: session } = useSession()
+  const user = { name: session?.user?.name ?? "", email: session?.user?.email ?? "" }
 
   return (
     <>

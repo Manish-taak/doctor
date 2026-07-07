@@ -15,3 +15,14 @@ export const accentSoft: Record<Accent, string> = {
   amber: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
   violet: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
 }
+
+const ACCENTS: Accent[] = ["primary", "coral", "amber", "violet"]
+
+/** Deterministic decorative accent for a record with no backend "accent" concept. */
+export function accentForId(id: string): Accent {
+  let hash = 0
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0
+  }
+  return ACCENTS[hash % ACCENTS.length]
+}

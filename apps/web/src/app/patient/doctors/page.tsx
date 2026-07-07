@@ -1,8 +1,9 @@
 import { DoctorCard } from "@/components/cards/doctor-card"
 import { PageHeader } from "@/components/dashboard/page-header"
-import { doctors } from "@/lib/mock/doctors"
+import { getDoctors } from "@/lib/api/doctors"
 
-export default function PatientDoctorsPage() {
+export default async function PatientDoctorsPage() {
+  const doctors = await getDoctors()
   const myDoctors = doctors.slice(0, 6)
 
   return (

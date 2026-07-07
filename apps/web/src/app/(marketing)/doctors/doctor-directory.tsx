@@ -16,11 +16,13 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { doctors } from "@/lib/mock/doctors"
+import type { Doctor } from "@/types"
 
-const specialties = ["All specialties", ...Array.from(new Set(doctors.map((doctor) => doctor.specialty)))]
-
-export function DoctorDirectory() {
+export function DoctorDirectory({ doctors }: { doctors: Doctor[] }) {
+  const specialties = useMemo(
+    () => ["All specialties", ...Array.from(new Set(doctors.map((doctor) => doctor.specialty)))],
+    [doctors]
+  )
   const [search, setSearch] = useState("")
   const [specialty, setSpecialty] = useState("All specialties")
   const [availableOnly, setAvailableOnly] = useState(false)
@@ -37,7 +39,7 @@ export function DoctorDirectory() {
       const matchesAvailability = !availableOnly || doctor.availableToday
       return matchesSpecialty && matchesQuery && matchesAvailability
     })
-  }, [search, specialty, availableOnly])
+  }, [doctors, search, specialty, availableOnly])
 
   return (
     <>

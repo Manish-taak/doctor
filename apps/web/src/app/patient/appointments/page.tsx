@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/dashboard/page-header"
 import { EmptyState } from "@/components/shared/empty-state"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { appointments } from "@/lib/mock/appointments"
+import { getAppointments } from "@/lib/api/appointments"
 import type { AppointmentStatus } from "@/types"
 
 const statusTabs: { value: AppointmentStatus; label: string }[] = [
@@ -15,7 +15,9 @@ const statusTabs: { value: AppointmentStatus; label: string }[] = [
   { value: "cancelled", label: "Cancelled" },
 ]
 
-export default function PatientAppointmentsPage() {
+export default async function PatientAppointmentsPage() {
+  const appointments = await getAppointments()
+
   return (
     <>
       <PageHeader

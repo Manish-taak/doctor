@@ -10,7 +10,7 @@ import { PageHeader } from "@/components/dashboard/page-header"
 import { EmptyState } from "@/components/shared/empty-state"
 import { MetricCard } from "@/components/shared/metric-card"
 import { accentGradient } from "@/lib/accent"
-import { dashboardCurrentUser } from "@/lib/dashboard-nav"
+import { auth } from "@/lib/auth"
 import { appointments } from "@/lib/mock/appointments"
 import { monthlyEarnings } from "@/lib/mock/charts"
 import { doctors } from "@/lib/mock/doctors"
@@ -18,8 +18,8 @@ import { reviews } from "@/lib/mock/reviews"
 import { patients } from "@/lib/mock/patients"
 import { cn } from "@/lib/utils"
 
-export default function DoctorDashboardPage() {
-  const user = dashboardCurrentUser.doctor
+export default async function DoctorDashboardPage() {
+  const session = await auth()
   const currentDoctor = doctors.find((d) => d.id === "dr-amara-chen")
   const upcoming = appointments.filter((a) => a.status === "upcoming")
   const thisMonthEarnings = monthlyEarnings[monthlyEarnings.length - 1]?.value ?? 0
@@ -27,7 +27,7 @@ export default function DoctorDashboardPage() {
   return (
     <>
       <PageHeader
-        title={`Good morning, ${user.name}`}
+        title={`Good morning, ${session?.user?.name ?? "Doctor"}`}
         description="Here's an overview of your practice today."
         actions={
           <Button className="gap-1.5" render={<Link href="/doctor/calendar" />}>

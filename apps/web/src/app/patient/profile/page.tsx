@@ -1,6 +1,7 @@
 "use client"
 
 import { Pencil, ShieldCheck } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -15,10 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { dashboardCurrentUser } from "@/lib/dashboard-nav"
+import { getInitials } from "@/lib/utils"
 
 export default function PatientProfilePage() {
-  const user = dashboardCurrentUser.patient
+  const { data: session } = useSession()
+  const user = {
+    name: session?.user?.name ?? "",
+    email: session?.user?.email ?? "",
+    initials: session?.user?.name ? getInitials(session.user.name) : "?",
+  }
 
   return (
     <>

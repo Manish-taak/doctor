@@ -11,24 +11,35 @@ import { PageHeader } from "@/components/dashboard/page-header"
 import { EmptyState } from "@/components/shared/empty-state"
 import { MetricCard } from "@/components/shared/metric-card"
 import { accentGradient } from "@/lib/accent"
-import { dashboardCurrentUser } from "@/lib/dashboard-nav"
-import { appointments } from "@/lib/mock/appointments"
+import { getAppointments } from "@/lib/api/appointments"
+import { getConversations } from "@/lib/api/conversations"
+import { getDoctors } from "@/lib/api/doctors"
+import { getNotifications } from "@/lib/api/notifications"
+import { getPrescriptions } from "@/lib/api/prescriptions"
+import { auth } from "@/lib/auth"
 import { weeklyVisits } from "@/lib/mock/charts"
-import { doctors } from "@/lib/mock/doctors"
-import { notifications } from "@/lib/mock/notifications"
-import { prescriptions } from "@/lib/mock/records"
 import { cn } from "@/lib/utils"
 
-export default function PatientDashboardPage() {
-  const user = dashboardCurrentUser.patient
+export default async function PatientDashboardPage() {
+  const [session, appointments, prescriptions, doctors, notifications, conversations] = await Promise.all([
+    auth(),
+    getAppointments(),
+    getPrescriptions(),
+    getDoctors(),
+    getNotifications(),
+    getConversations(),
+  ])
+
+  const firstName = session?.user?.name?.split(" ")[0] ?? "there"
   const upcoming = appointments.filter((a) => a.status === "upcoming")
   const activePrescriptions = prescriptions.filter((p) => p.status === "active")
   const myDoctors = doctors.slice(0, 4)
+  const unreadMessages = conversations.reduce((sum, c) => sum + c.unreadCount, 0)
 
   return (
     <>
       <PageHeader
-        title={`Welcome back, ${user.name.split(" ")[0]}`}
+        title={`Welcome back, ${firstName}`}
         description="Here's what's happening with your health today."
         actions={
           <Button className="gap-1.5" render={<Link href="/patient/appointments" />}>
@@ -40,7 +51,7 @@ export default function PatientDashboardPage() {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Upcoming visits" value={String(upcoming.length)} icon={CalendarDays} trend={{ value: "On track", positive: true }} />
         <MetricCard label="Active prescriptions" value={String(activePrescriptions.length)} icon={Pill} />
-        <MetricCard label="Unread messages" value="3" icon={MessageSquare} trend={{ value: "2 new today", positive: true }} />
+        <MetricCard label="Unread messages" value={String(unreadMessages)} icon={MessageSquare} />
         <MetricCard label="Doctors followed" value={String(myDoctors.length)} icon={Stethoscope} />
       </div>
 
