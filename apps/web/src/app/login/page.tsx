@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import Link from "next/link"
 
 import { AuthShell } from "@/components/auth/auth-shell"
@@ -15,7 +16,9 @@ export default function LoginPage() {
         </>
       }
     >
-      <LoginForm />
+      <Suspense>
+        <LoginForm />
+      </Suspense>
     </AuthShell>
   )
 }

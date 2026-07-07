@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { registerSchema, type RegisterInput, type SelfServiceRole } from "@doctor/validators"
 import { Eye, EyeOff } from "lucide-react"
 import { signIn } from "next-auth/react"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -29,14 +29,14 @@ export function SignupForm() {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: { role: "PATIENT" },
   })
 
-  const role = watch("role")
+  const role = useWatch({ control, name: "role" })
 
   const onSubmit = (data: RegisterInput) => {
     setServerError(null)

@@ -38,10 +38,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <TooltipProvider delay={150}>{children}</TooltipProvider>
-          <Toaster position="bottom-right" />
-        </ThemeProvider>
+        <SessionProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <TooltipProvider delay={150}>{children}</TooltipProvider>
+            <Toaster position="bottom-right" />
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

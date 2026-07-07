@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Activity, Bell, LogOut, Menu, Search, Settings, User as UserIcon } from "lucide-react"
+import { signOut, useSession } from "next-auth/react"
 
 import { ModeToggle } from "@/components/mode-toggle"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -19,14 +20,20 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { DashboardNavList } from "@/components/dashboard/nav-list"
-import { dashboardCurrentUser, dashboardRoleLabel } from "@/lib/dashboard-nav"
+import { dashboardRoleLabel } from "@/lib/dashboard-nav"
 import { notifications } from "@/lib/mock/notifications"
 import { siteConfig } from "@/lib/site-config"
+import { getInitials } from "@/lib/utils"
 import type { UserRole } from "@/types"
 
 export function DashboardTopbar({ role }: { role: UserRole }) {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const user = dashboardCurrentUser[role]
+  const { data: session } = useSession()
+  const user = {
+    name: session?.user?.name ?? "Guest",
+    email: session?.user?.email ?? "",
+    initials: session?.user?.name ? getInitials(session.user.name) : "?",
+  }
   const unread = notifications.filter((n) => !n.read)
 
   return (
@@ -116,7 +123,7 @@ export function DashboardTopbar({ role }: { role: UserRole }) {
               <Settings /> Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem render={<Link href="/" />} variant="destructive">
+            <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })} variant="destructive">
               <LogOut /> Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

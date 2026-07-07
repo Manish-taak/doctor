@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
   turbopack: {
-    root: path.join(__dirname),
+    root: path.join(__dirname, "..", ".."),
   },
 };
 
