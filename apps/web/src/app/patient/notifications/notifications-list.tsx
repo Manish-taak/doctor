@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react"
 import { EmptyState } from "@/components/shared/empty-state"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { markAllNotificationsRead } from "@/lib/api/notifications"
+import { markAllNotificationsRead } from "@/lib/api/notifications-client"
 import { cn } from "@/lib/utils"
 import type { Notification, NotificationType } from "@/types"
 

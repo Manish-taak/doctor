@@ -10,19 +10,37 @@ import { PageHeader } from "@/components/dashboard/page-header"
 import { EmptyState } from "@/components/shared/empty-state"
 import { MetricCard } from "@/components/shared/metric-card"
 import { accentGradient } from "@/lib/accent"
+import { getAppointments } from "@/lib/api/appointments"
+import { getMyDoctorProfile } from "@/lib/api/doctors"
+import { getMyPatients } from "@/lib/api/patients"
+import { getReviews } from "@/lib/api/reviews"
 import { auth } from "@/lib/auth"
-import { appointments } from "@/lib/mock/appointments"
-import { monthlyEarnings } from "@/lib/mock/charts"
-import { doctors } from "@/lib/mock/doctors"
-import { reviews } from "@/lib/mock/reviews"
-import { patients } from "@/lib/mock/patients"
+import { groupByMonth } from "@/lib/stats"
 import { cn } from "@/lib/utils"
 
+function formatCurrency(value: number) {
+  return `$${value.toLocaleString("en-US")}`
+}
+
 export default async function DoctorDashboardPage() {
-  const session = await auth()
-  const currentDoctor = doctors.find((d) => d.id === "dr-amara-chen")
-  const upcoming = appointments.filter((a) => a.status === "upcoming")
-  const thisMonthEarnings = monthlyEarnings[monthlyEarnings.length - 1]?.value ?? 0
+  const [session, doctor, appointments, patients] = await Promise.all([
+    auth(),
+    getMyDoctorProfile(),
+    getAppointments(),
+    getMyPatients(),
+  ])
+  const reviews = await getReviews(doctor.id)
+
+  const now = new Date()
+  const todayStr = now.toISOString().slice(0, 10)
+  const todaysAppointments = appointments.filter((a) => a.status === "upcoming" && a.date === todayStr)
+
+  const revenueSeries = groupByMonth(
+    appointments.filter((a) => a.status === "completed"),
+    (a) => a.date,
+    () => doctor.price
+  )
+  const thisMonthEarnings = revenueSeries[revenueSeries.length - 1]?.value ?? 0
 
   return (
     <>
@@ -37,24 +55,10 @@ export default async function DoctorDashboardPage() {
       />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          label="Today's appointments"
-          value={String(upcoming.length)}
-          icon={CalendarDays}
-          trend={{ value: "On schedule", positive: true }}
-        />
+        <MetricCard label="Today's appointments" value={String(todaysAppointments.length)} icon={CalendarDays} />
         <MetricCard label="Total patients" value={String(patients.length)} icon={Users} />
-        <MetricCard
-          label="This month's earnings"
-          value={`$${thisMonthEarnings.toLocaleString()}`}
-          icon={Wallet}
-          trend={{ value: "+12% vs last month", positive: true }}
-        />
-        <MetricCard
-          label="Average rating"
-          value={currentDoctor ? currentDoctor.rating.toFixed(1) : "—"}
-          icon={Star}
-        />
+        <MetricCard label="This month's earnings" value={formatCurrency(thisMonthEarnings)} icon={Wallet} />
+        <MetricCard label="Average rating" value={doctor.rating.toFixed(1)} icon={Star} />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -67,14 +71,14 @@ export default async function DoctorDashboardPage() {
                   View all
                 </Link>
               </div>
-              {upcoming.length > 0 ? (
+              {todaysAppointments.length > 0 ? (
                 <div className="flex flex-col gap-3">
-                  {upcoming.slice(0, 4).map((appointment) => (
+                  {todaysAppointments.slice(0, 4).map((appointment) => (
                     <AppointmentCard key={appointment.id} appointment={appointment} perspective="doctor" />
                   ))}
                 </div>
               ) : (
-                <EmptyState icon={CalendarDays} title="No appointments scheduled" description="Your upcoming visits will show up here." />
+                <EmptyState icon={CalendarDays} title="No appointments today" description="Your upcoming visits will show up here." />
               )}
             </CardContent>
           </Card>
@@ -87,7 +91,7 @@ export default async function DoctorDashboardPage() {
                   View details
                 </Link>
               </div>
-              <LineChart data={monthlyEarnings} />
+              <LineChart data={revenueSeries} />
             </CardContent>
           </Card>
         </div>
@@ -101,34 +105,38 @@ export default async function DoctorDashboardPage() {
                   View all
                 </Link>
               </div>
-              <div className="flex flex-col gap-4">
-                {reviews.slice(0, 3).map((review) => (
-                  <div key={review.id} className="flex items-start gap-3">
-                    <Avatar>
-                      <AvatarFallback className={cn("bg-linear-to-br font-semibold text-white", accentGradient[review.accent])}>
-                        {review.patientInitials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-1 flex-col gap-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="text-sm font-medium text-foreground">{review.patientName}</p>
-                        <div className="flex items-center gap-0.5">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={cn(
-                                "size-3",
-                                i < review.rating ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"
-                              )}
-                            />
-                          ))}
+              {reviews.length > 0 ? (
+                <div className="flex flex-col gap-4">
+                  {reviews.slice(0, 3).map((review) => (
+                    <div key={review.id} className="flex items-start gap-3">
+                      <Avatar>
+                        <AvatarFallback className={cn("bg-linear-to-br font-semibold text-white", accentGradient[review.accent])}>
+                          {review.patientInitials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-1 flex-col gap-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-sm font-medium text-foreground">{review.patientName}</p>
+                          <div className="flex items-center gap-0.5">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <Star
+                                key={i}
+                                className={cn(
+                                  "size-3",
+                                  i < review.rating ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"
+                                )}
+                              />
+                            ))}
+                          </div>
                         </div>
+                        <p className="line-clamp-2 text-xs text-muted-foreground">{review.comment}</p>
                       </div>
-                      <p className="line-clamp-2 text-xs text-muted-foreground">{review.comment}</p>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">No reviews yet.</p>
+              )}
             </CardContent>
           </Card>
         </div>

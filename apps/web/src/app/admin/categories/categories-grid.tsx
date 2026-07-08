@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { PageHeader } from "@/components/dashboard/page-header"
-import { categoryIcons, createCategory, resolveIcon, type ApiCategory } from "@/lib/api/categories"
+import { categoryIcons, createCategory, resolveIcon, type ApiCategory } from "@/lib/api/categories-client"
 
 const iconOptions = Object.keys(categoryIcons)
 

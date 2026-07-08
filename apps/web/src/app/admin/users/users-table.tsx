@@ -29,7 +29,7 @@ import {
 import { PageHeader } from "@/components/dashboard/page-header"
 import { EmptyState } from "@/components/shared/empty-state"
 import { accentGradient } from "@/lib/accent"
-import { updateUserRole } from "@/lib/api/users"
+import { updateUserRole } from "@/lib/api/users-client"
 import { cn } from "@/lib/utils"
 import type { PlatformUser, UserRole, UserStatus } from "@/types"
 

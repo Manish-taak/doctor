@@ -1,10 +1,9 @@
 import { format } from "date-fns"
 
 import { accentForId } from "@/lib/accent"
+import { findReviewsForDoctor } from "@/lib/server/services/reviews"
 import { getInitials } from "@/lib/utils"
 import type { Review } from "@/types"
-
-import { apiFetch } from "./client"
 
 interface ApiReview {
   id: string
@@ -27,6 +26,6 @@ function mapReview(api: ApiReview): Review {
 }
 
 export async function getReviews(doctorId: string): Promise<Review[]> {
-  const reviews = await apiFetch<ApiReview[]>(`/reviews?doctorId=${doctorId}`)
-  return reviews.map(mapReview)
+  const reviews = await findReviewsForDoctor(doctorId)
+  return reviews.map((r) => mapReview(r as unknown as ApiReview))
 }

@@ -15,7 +15,7 @@ import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { accentGradient } from "@/lib/accent"
-import { updateDoctorProfile } from "@/lib/api/doctors"
+import { updateDoctorProfile } from "@/lib/api/doctors-client"
 import { cn } from "@/lib/utils"
 import type { Doctor } from "@/types"
 

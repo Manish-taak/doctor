@@ -13,7 +13,8 @@ import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { changePassword } from "@/lib/api/auth"
-import { updateProfile, type MyProfile } from "@/lib/api/users"
+import { updateProfile } from "@/lib/api/users-client"
+import type { MyProfile } from "@/lib/api/users"
 
 export function SettingsForm({ profile }: { profile: MyProfile }) {
   const { data: session } = useSession()

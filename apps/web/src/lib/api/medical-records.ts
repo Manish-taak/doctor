@@ -1,8 +1,8 @@
 import { format } from "date-fns"
 
+import { findMedicalRecordsForUser } from "@/lib/server/services/medical-records"
+import { requireUser } from "@/lib/server/session"
 import type { MedicalRecord, RecordType } from "@/types"
-
-import { apiFetch, serverAuthHeaders } from "./client"
 
 interface ApiMedicalRecord {
   id: string
@@ -34,7 +34,7 @@ function mapMedicalRecord(api: ApiMedicalRecord): MedicalRecord {
 }
 
 export async function getMedicalRecords(): Promise<MedicalRecord[]> {
-  const headers = await serverAuthHeaders()
-  const records = await apiFetch<ApiMedicalRecord[]>("/medical-records", { headers })
-  return records.map(mapMedicalRecord)
+  const user = await requireUser()
+  const records = await findMedicalRecordsForUser(user)
+  return records.map((r) => mapMedicalRecord(r as unknown as ApiMedicalRecord))
 }

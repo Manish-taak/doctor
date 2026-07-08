@@ -17,8 +17,6 @@ import { Label } from "@/components/ui/label"
 import { RoleTabs } from "@/components/auth/role-tabs"
 import type { UserRole } from "@/types"
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"
-
 export function SignupForm() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
@@ -41,7 +39,7 @@ export function SignupForm() {
   const onSubmit = (data: RegisterInput) => {
     setServerError(null)
     startTransition(async () => {
-      const response = await fetch(`${API_URL}/auth/register`, {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

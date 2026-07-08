@@ -1,10 +1,10 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import * as bcrypt from "bcrypt"
+import { prisma } from "@doctor/database"
 import { loginSchema } from "@doctor/validators"
 
 import type { UserRole } from "@/types"
-
-const API_URL = process.env.API_URL ?? "http://localhost:4000"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: { strategy: "jwt" },
@@ -19,21 +19,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const parsed = loginSchema.safeParse(credentials)
         if (!parsed.success) return null
 
-        const response = await fetch(`${API_URL}/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(parsed.data),
-        })
-        if (!response.ok) return null
+        const user = await prisma.user.findUnique({ where: { email: parsed.data.email } })
+        if (!user) return null
 
-        const data = await response.json()
+        const valid = await bcrypt.compare(parsed.data.password, user.passwordHash)
+        if (!valid) return null
 
         return {
-          id: data.user.id,
-          name: data.user.name,
-          email: data.user.email,
-          role: data.user.role.toLowerCase() as UserRole,
-          accessToken: data.accessToken as string,
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role.toLowerCase() as UserRole,
         }
       },
     }),
@@ -42,7 +38,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt: ({ token, user }) => {
       if (user) {
         token.role = user.role
-        token.accessToken = user.accessToken
+        // Kept as a truthy marker for existing client-side "is there a session"
+        // checks — the real auth boundary is now this encrypted session cookie
+        // itself, verified server-side via `auth()` on every request.
+        token.accessToken = "session"
       }
       return token
     },

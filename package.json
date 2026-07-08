@@ -8,21 +8,13 @@
   ],
   "scripts": {
     "postinstall": "npm run db:generate && npm run build -w packages/validators && npm run build -w packages/database",
-    "dev:web": "npm run dev -w apps/web",
-    "dev:api": "npm run dev -w apps/api",
-    "dev": "concurrently -n web,api -c blue,green \"npm:dev:web\" \"npm:dev:api\"",
-    "build": "npm run build --workspaces --if-present",
-    "build:web": "npm run build -w apps/web && cp -r apps/web/public apps/web/.next/standalone/apps/web/public && cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/static",
-    "build:api": "npm run build -w apps/api",
-    "start:web": "node apps/web/.next/standalone/apps/web/server.js",
-    "start:api": "npm run start -w apps/api",
+    "dev": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/web && cp -r apps/web/public apps/web/.next/standalone/apps/web/public && cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/static",
+    "start": "node apps/web/.next/standalone/apps/web/server.js",
     "lint": "npm run lint --workspaces --if-present",
     "db:generate": "npm run generate -w packages/database",
     "db:migrate": "npm run migrate -w packages/database",
     "db:seed": "npm run seed -w packages/database",
     "db:studio": "npm run studio -w packages/database"
-  },
-  "devDependencies": {
-    "concurrently": "^9.2.1"
   }
 }

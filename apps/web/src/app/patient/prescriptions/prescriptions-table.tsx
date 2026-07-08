@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { requestRefill } from "@/lib/api/prescriptions"
+import { requestRefill } from "@/lib/api/prescriptions-client"
 import type { Prescription, PrescriptionStatus } from "@/types"
 
 const statusStyles: Record<PrescriptionStatus, string> = {

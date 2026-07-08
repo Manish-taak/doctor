@@ -1,12 +1,10 @@
 import { format } from "date-fns"
 
+import { findPrescriptionsForUser } from "@/lib/server/services/prescriptions"
+import { requireUser } from "@/lib/server/session"
 import type { Prescription, PrescriptionStatus } from "@/types"
 
-import { apiFetch, serverAuthHeaders } from "./client"
-
-const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"
-
-interface ApiPrescription {
+export interface ApiPrescription {
   id: string
   medication: string
   dosage: string
@@ -17,7 +15,7 @@ interface ApiPrescription {
   doctor?: { user: { name: string } }
 }
 
-function mapPrescription(api: ApiPrescription): Prescription {
+export function mapPrescription(api: ApiPrescription): Prescription {
   return {
     id: api.id,
     medication: api.medication,
@@ -31,23 +29,7 @@ function mapPrescription(api: ApiPrescription): Prescription {
 }
 
 export async function getPrescriptions(): Promise<Prescription[]> {
-  const headers = await serverAuthHeaders()
-  const prescriptions = await apiFetch<ApiPrescription[]>("/prescriptions", { headers })
-  return prescriptions.map(mapPrescription)
-}
-
-// Client-safe mutation — takes the access token directly since it's called from
-// the "use client" Prescriptions table.
-export async function requestRefill(token: string, id: string): Promise<Prescription> {
-  const response = await fetch(`${PUBLIC_API_URL}/prescriptions/${id}/request-refill`, {
-    method: "PATCH",
-    headers: { Authorization: `Bearer ${token}` },
-  })
-
-  if (!response.ok) {
-    const body = await response.json().catch(() => null)
-    throw new Error(body?.message ?? "Failed to request refill")
-  }
-
-  return mapPrescription(await response.json())
+  const user = await requireUser()
+  const prescriptions = await findPrescriptionsForUser(user)
+  return prescriptions.map((p) => mapPrescription(p as unknown as ApiPrescription))
 }

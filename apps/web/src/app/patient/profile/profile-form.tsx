@@ -18,7 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { updateProfile, type MyProfile } from "@/lib/api/users"
+import { updateProfile } from "@/lib/api/users-client"
+import type { MyProfile } from "@/lib/api/users"
 import { getInitials } from "@/lib/utils"
 
 export function ProfileForm({ profile }: { profile: MyProfile }) {

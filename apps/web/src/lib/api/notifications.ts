@@ -1,12 +1,10 @@
 import { formatDistanceToNow } from "date-fns"
 
+import { findNotificationsForUser } from "@/lib/server/services/notifications"
+import { requireUser } from "@/lib/server/session"
 import type { Notification, NotificationType } from "@/types"
 
-import { apiFetch, serverAuthHeaders } from "./client"
-
-const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"
-
-interface ApiNotification {
+export interface ApiNotification {
   id: string
   type: "APPOINTMENT" | "MESSAGE" | "PAYMENT" | "SYSTEM"
   title: string
@@ -15,7 +13,7 @@ interface ApiNotification {
   createdAt: string
 }
 
-function mapNotification(api: ApiNotification): Notification {
+export function mapNotification(api: ApiNotification): Notification {
   return {
     id: api.id,
     type: api.type.toLowerCase() as NotificationType,
@@ -27,23 +25,7 @@ function mapNotification(api: ApiNotification): Notification {
 }
 
 export async function getNotifications(): Promise<Notification[]> {
-  const headers = await serverAuthHeaders()
-  const notifications = await apiFetch<ApiNotification[]>("/notifications", { headers })
-  return notifications.map(mapNotification)
-}
-
-// Client-safe mutations — take the access token directly instead of using the
-// server-only `auth()` helper, so these can be called from "use client" components.
-export async function markNotificationRead(token: string, id: string): Promise<void> {
-  await fetch(`${PUBLIC_API_URL}/notifications/${id}/read`, {
-    method: "PATCH",
-    headers: { Authorization: `Bearer ${token}` },
-  })
-}
-
-export async function markAllNotificationsRead(token: string): Promise<void> {
-  await fetch(`${PUBLIC_API_URL}/notifications/read-all`, {
-    method: "PATCH",
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  const user = await requireUser()
+  const notifications = await findNotificationsForUser(user)
+  return notifications.map((n) => mapNotification(n as unknown as ApiNotification))
 }

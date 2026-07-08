@@ -1,8 +1,8 @@
 import { format } from "date-fns"
 
+import { findTransactionsForUser } from "@/lib/server/services/transactions"
+import { requireUser } from "@/lib/server/session"
 import type { Transaction, TransactionStatus } from "@/types"
-
-import { apiFetch, serverAuthHeaders } from "./client"
 
 interface ApiTransaction {
   id: string
@@ -27,7 +27,7 @@ function mapTransaction(api: ApiTransaction): Transaction {
 }
 
 export async function getTransactions(): Promise<Transaction[]> {
-  const headers = await serverAuthHeaders()
-  const transactions = await apiFetch<ApiTransaction[]>("/transactions", { headers })
-  return transactions.map(mapTransaction)
+  const user = await requireUser()
+  const transactions = await findTransactionsForUser(user)
+  return transactions.map((t) => mapTransaction(t as unknown as ApiTransaction))
 }

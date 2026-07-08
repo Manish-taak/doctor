@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { createAppointment } from "@/lib/api/appointments"
+import { createAppointment } from "@/lib/api/appointments-client"
 
 const timeSlots = ["9:00 AM", "11:30 AM", "1:15 PM", "3:00 PM", "4:45 PM"]
 

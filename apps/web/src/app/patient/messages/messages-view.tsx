@@ -11,11 +11,17 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { accentGradient } from "@/lib/accent"
-import { getMessagesClient, sendMessage } from "@/lib/api/conversations"
+import { getMessagesClient, sendMessage } from "@/lib/api/conversations-client"
 import { cn } from "@/lib/utils"
 import type { Conversation, Message } from "@/types"
 
-export function MessagesView({ conversations }: { conversations: Conversation[] }) {
+export function MessagesView({
+  conversations,
+  description = "Chat with your doctors and the Vitalis care team.",
+}: {
+  conversations: Conversation[]
+  description?: string
+}) {
   const { data: session } = useSession()
   const [selectedId, setSelectedId] = useState(conversations[0]?.id ?? "")
   const [thread, setThread] = useState<Message[]>([])
@@ -39,7 +45,7 @@ export function MessagesView({ conversations }: { conversations: Conversation[] 
     <>
       <div className="mb-6 flex flex-col gap-1">
         <h1 className="font-heading text-2xl font-semibold tracking-tight text-foreground">Messages</h1>
-        <p className="text-sm text-muted-foreground">Chat with your doctors and the Vitalis care team.</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
 
       <Card className="grid h-[calc(100vh-14rem)] min-h-[28rem] grid-cols-1 gap-0 overflow-hidden p-0 ring-foreground/5 md:grid-cols-[19rem_1fr]">

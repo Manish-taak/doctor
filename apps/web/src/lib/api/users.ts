@@ -1,14 +1,12 @@
 import { format } from "date-fns"
 
 import { accentForId } from "@/lib/accent"
+import { findAllUsers, findMe } from "@/lib/server/services/users"
+import { requireRole, requireUser } from "@/lib/server/session"
 import { getInitials } from "@/lib/utils"
 import type { PlatformUser, UserRole } from "@/types"
 
-import { apiFetch, serverAuthHeaders } from "./client"
-
-const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"
-
-interface ApiUser {
+export interface ApiUser {
   id: string
   name: string
   email: string
@@ -16,7 +14,7 @@ interface ApiUser {
   createdAt: string
 }
 
-function mapUser(api: ApiUser): PlatformUser {
+export function mapUser(api: ApiUser): PlatformUser {
   return {
     id: api.id,
     name: api.name,
@@ -30,27 +28,10 @@ function mapUser(api: ApiUser): PlatformUser {
 }
 
 export async function getUsers(): Promise<PlatformUser[]> {
-  const headers = await serverAuthHeaders()
-  const users = await apiFetch<ApiUser[]>("/users", { headers })
-  return users.map(mapUser)
-}
-
-// Client-safe mutation — takes the access token directly since it's called from
-// a "use client" component (the Admin Users table).
-export async function updateUserRole(token: string, id: string, role: UserRole): Promise<void> {
-  const response = await fetch(`${PUBLIC_API_URL}/users/${id}/role`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ role: role.toUpperCase() }),
-  })
-
-  if (!response.ok) {
-    const body = await response.json().catch(() => null)
-    throw new Error(body?.message ?? "Failed to update role")
-  }
+  const user = await requireUser()
+  requireRole(user, "ADMIN")
+  const users = await findAllUsers()
+  return users.map((u) => mapUser(u as unknown as ApiUser))
 }
 
 export interface MyProfile {
@@ -70,37 +51,7 @@ export interface MyProfile {
 }
 
 export async function getMyProfile(): Promise<MyProfile> {
-  const headers = await serverAuthHeaders()
-  return apiFetch<MyProfile>("/users/me", { headers })
-}
-
-export interface UpdateProfileInput {
-  name?: string
-  phone?: string
-  dob?: string
-  gender?: string
-  insuranceProvider?: string
-  insurancePolicyNumber?: string
-  insuranceGroupNumber?: string
-  insuranceValidThrough?: string
-}
-
-// Client-safe mutation — takes the access token directly since it's called from
-// the "use client" Profile/Settings forms.
-export async function updateProfile(token: string, input: UpdateProfileInput): Promise<MyProfile> {
-  const response = await fetch(`${PUBLIC_API_URL}/users/me`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(input),
-  })
-
-  if (!response.ok) {
-    const body = await response.json().catch(() => null)
-    throw new Error(body?.message ?? "Failed to update profile")
-  }
-
-  return response.json()
+  const user = await requireUser()
+  const profile = await findMe(user.id)
+  return profile as unknown as MyProfile
 }
