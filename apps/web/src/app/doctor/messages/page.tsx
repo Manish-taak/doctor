@@ -47,7 +47,7 @@ export default function DoctorMessagesPage() {
                       </AvatarFallback>
                     </Avatar>
                     {conversation.online && (
-                      <span className="absolute right-0 bottom-0 size-2.5 rounded-full bg-primary ring-2 ring-background" />
+                      <span className="absolute right-0 bottom-0 size-2.5 rounded-sm bg-primary ring-2 ring-background" />
                     )}
                   </div>
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -90,7 +90,7 @@ export default function DoctorMessagesPage() {
                     >
                       <div
                         className={cn(
-                          "max-w-[75%] rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
+                          "max-w-[75%] rounded-sm px-3.5 py-2 text-sm leading-relaxed",
                           message.sender === "me"
                             ? "bg-primary text-primary-foreground"
                             : "bg-muted text-foreground"

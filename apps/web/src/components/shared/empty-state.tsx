@@ -13,8 +13,8 @@ export function EmptyState({
   action?: ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border py-16 text-center">
-      <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
+    <div className="flex flex-col items-center justify-center gap-3 rounded-sm border border-dashed border-border py-16 text-center">
+      <div className="flex size-12 items-center justify-center rounded-sm bg-muted text-muted-foreground">
         <Icon className="size-5" />
       </div>
       <div className="flex flex-col gap-1">

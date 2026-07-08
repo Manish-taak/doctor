@@ -1,8 +1,8 @@
-import { Container } from "@/components/layout/container"
-import { Reveal } from "@/components/motion/reveal"
-import { StaggerGroup, StaggerItem } from "@/components/motion/stagger"
-import { Badge } from "@/components/ui/badge"
-import { steps } from "@/lib/mock/features"
+import { Container } from "@/components/layout/container";
+import { Reveal } from "@/components/motion/reveal";
+import { StaggerGroup, StaggerItem } from "@/components/motion/stagger";
+import { Badge } from "@/components/ui/badge";
+import { steps } from "@/lib/mock/features";
 
 export function HowItWorksSection() {
   return (
@@ -21,22 +21,25 @@ export function HowItWorksSection() {
         <div className="relative mt-16">
           <div
             aria-hidden
-            className="absolute top-6 right-[12.5%] left-[12.5%] hidden h-px bg-border lg:block"
-          />
+            className="absolute top-1/2 right-[12.5%] left-[12.5%] hidden h-px bg-border lg:block"
+          />{" "}
+          n
           <StaggerGroup className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((step) => (
               <StaggerItem
                 key={step.id}
-                className="relative flex flex-col items-center gap-4 text-center lg:items-start lg:text-left"
+                className="relative flex flex-col items-center gap-4 text-center lg:items-start lg:text-left dark:bg-secondary bg-white p-4 rounded-sm"
               >
-                <span className="relative z-10 flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm shadow-primary/30 ring-8 ring-secondary/40">
+                <span className="relative z-10 flex size-12 items-center justify-center rounded-sm bg-primary text-primary-foreground shadow-sm shadow-primary/30 ring-8 ring-secondary/40">
                   <step.icon className="size-5" strokeWidth={2} />
                 </span>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-semibold tracking-wider text-primary uppercase">
                     Step {step.step}
                   </span>
-                  <h3 className="font-heading text-lg font-semibold text-foreground">{step.title}</h3>
+                  <h3 className="font-heading text-lg font-semibold text-foreground">
+                    {step.title}
+                  </h3>
                   <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
                     {step.description}
                   </p>
@@ -47,5 +50,5 @@ export function HowItWorksSection() {
         </div>
       </Container>
     </section>
-  )
+  );
 }

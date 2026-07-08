@@ -148,7 +148,7 @@ export function AdminSettingsForm({ settings }: { settings: PlatformSettings }) 
                   <h2 className="font-heading text-base font-semibold text-foreground">Enterprise plan</h2>
                   <p className="text-sm text-muted-foreground">Unlimited providers, priority support, and advanced analytics.</p>
                 </div>
-                <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">Active</span>
+                <span className="rounded-sm bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">Active</span>
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="font-heading text-2xl font-semibold text-foreground">$2,499</span>

@@ -61,7 +61,7 @@ export default function DoctorAnalyticsPage() {
               return (
                 <div key={category.id} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
                   <div className="flex items-center gap-3">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary">
                       <Icon className="size-4.5" />
                     </div>
                     <p className="text-sm font-medium text-foreground">{category.name}</p>

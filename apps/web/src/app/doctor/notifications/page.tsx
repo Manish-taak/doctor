@@ -36,11 +36,11 @@ export default function DoctorNotificationsPage() {
                 <div
                   key={notification.id}
                   className={cn(
-                    "flex items-start gap-3 rounded-xl p-3 transition-colors",
+                    "flex items-start gap-3 rounded-sm p-3 transition-colors",
                     !notification.read && "bg-primary/5"
                   )}
                 >
-                  <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg", typeStyles[notification.type])}>
+                  <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-sm", typeStyles[notification.type])}>
                     <Icon className="size-4.5" />
                   </div>
                   <div className="flex flex-1 flex-col gap-0.5">
@@ -48,7 +48,7 @@ export default function DoctorNotificationsPage() {
                       <p className={cn("text-sm", notification.read ? "font-medium text-foreground/80" : "font-semibold text-foreground")}>
                         {notification.title}
                       </p>
-                      {!notification.read && <span className="size-2 shrink-0 rounded-full bg-primary" />}
+                      {!notification.read && <span className="size-2 shrink-0 rounded-sm bg-primary" />}
                     </div>
                     <p className="text-xs text-muted-foreground">{notification.description}</p>
                     <p className="mt-0.5 text-[0.7rem] text-muted-foreground">{notification.time}</p>

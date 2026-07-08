@@ -13,17 +13,22 @@ export function TopDoctorsSection({ doctors }: { doctors: Doctor[] }) {
   return (
     <section className="py-24 sm:py-32">
       <Container>
-        <Reveal className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-          <div className="flex max-w-xl flex-col gap-4">
+        <Reveal className="flex flex-col items-center justify-center sm:justify-between gap-6 sm:flex-row sm:items-end">
+          <div className="flex max-w-xl flex-col items-center sm:items-start gap-4">
             <Badge variant="secondary">Top specialists</Badge>
-            <h2 className="font-heading text-3xl font-semibold tracking-tight text-balance text-foreground sm:text-4xl">
+            <h2 className="font-heading text-center sm:text-left  text-3xl font-semibold tracking-tight text-balance text-foreground sm:text-4xl">
               Meet doctors patients love
             </h2>
-            <p className="text-lg text-balance text-muted-foreground">
-              Every specialist on Vitalis is licensed, credential-verified, and rated by real patients.
+            <p className="text-lg text-center sm:text-left  text-balance text-muted-foreground">
+              Every specialist on Vitalis is licensed, credential-verified, and
+              rated by real patients.
             </p>
           </div>
-          <Button variant="outline" className="gap-1.5" render={<Link href="/doctors" />}>
+          <Button
+            variant="outline"
+            className="gap-1.5"
+            render={<Link href="/doctors" />}
+          >
             View all doctors <ArrowRight className="size-4" />
           </Button>
         </Reveal>
@@ -37,5 +42,5 @@ export function TopDoctorsSection({ doctors }: { doctors: Doctor[] }) {
         </StaggerGroup>
       </Container>
     </section>
-  )
+  );
 }

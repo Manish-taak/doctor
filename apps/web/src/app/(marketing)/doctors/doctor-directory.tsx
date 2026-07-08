@@ -43,7 +43,7 @@ export function DoctorDirectory({ doctors }: { doctors: Doctor[] }) {
 
   return (
     <>
-      <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-sm border border-border bg-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1 sm:max-w-xs">
             <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />

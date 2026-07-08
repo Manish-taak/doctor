@@ -37,8 +37,8 @@ export default function DoctorReviewsPage() {
                   <span className="flex w-10 shrink-0 items-center gap-1 text-xs text-muted-foreground">
                     {row.stars} <Star className="size-3 fill-amber-400 text-amber-400" />
                   </span>
-                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-                    <div className="h-full rounded-full bg-amber-400" style={{ width: `${row.pct}%` }} />
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-sm bg-muted">
+                    <div className="h-full rounded-sm bg-amber-400" style={{ width: `${row.pct}%` }} />
                   </div>
                   <span className="w-6 shrink-0 text-right text-xs text-muted-foreground">{row.count}</span>
                 </div>

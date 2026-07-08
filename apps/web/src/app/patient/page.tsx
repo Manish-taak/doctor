@@ -124,7 +124,7 @@ export default async function PatientDashboardPage() {
                   <div key={notification.id} className="flex items-start gap-3">
                     <span
                       className={cn(
-                        "mt-1.5 size-1.5 shrink-0 rounded-full",
+                        "mt-1.5 size-1.5 shrink-0 rounded-sm",
                         notification.read ? "bg-border" : "bg-primary"
                       )}
                     />

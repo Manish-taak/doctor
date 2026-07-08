@@ -65,7 +65,7 @@ export default function ServicesPage() {
               <StaggerItem key={category.id}>
                 <Card className="group h-full ring-foreground/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-foreground/5">
                   <CardContent className="flex h-full flex-col gap-4">
-                    <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+                    <div className="flex size-11 items-center justify-center rounded-sm bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
                       <category.icon className="size-5" strokeWidth={2} />
                     </div>
                     <div className="flex flex-col gap-1.5">
@@ -102,7 +102,7 @@ export default function ServicesPage() {
               <Card className="h-full ring-foreground/5">
                 <CardContent className="flex h-full flex-col gap-6">
                   <div className="flex items-center gap-3">
-                    <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <span className="flex size-11 items-center justify-center rounded-sm bg-primary/10 text-primary">
                       <MapPin className="size-5" strokeWidth={2} />
                     </span>
                     <h3 className="font-heading text-lg font-semibold text-foreground">In-person visit</h3>
@@ -130,7 +130,7 @@ export default function ServicesPage() {
               <Card className="h-full ring-2 ring-primary shadow-xl shadow-primary/10">
                 <CardContent className="flex h-full flex-col gap-6">
                   <div className="flex items-center gap-3">
-                    <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <span className="flex size-11 items-center justify-center rounded-sm bg-primary/10 text-primary">
                       <Video className="size-5" strokeWidth={2} />
                     </span>
                     <h3 className="font-heading text-lg font-semibold text-foreground">Video visit</h3>

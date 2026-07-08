@@ -162,7 +162,7 @@ export default function FaqPage() {
 
               {categories.map((category) => (
                 <TabsContent key={category.value} value={category.value} className="mt-8">
-                  <div className="rounded-2xl border border-border bg-card px-6 shadow-sm">
+                  <div className="rounded-sm border border-border bg-card px-6 shadow-sm">
                     <Accordion>
                       {category.items.map((faq) => (
                         <AccordionItem key={faq.id} value={faq.id}>
@@ -183,7 +183,7 @@ export default function FaqPage() {
             <Card className="ring-foreground/5">
               <CardContent className="flex flex-col items-center gap-4 py-4 text-center sm:flex-row sm:justify-between sm:text-left">
                 <div className="flex items-center gap-3">
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary">
                     <LifeBuoy className="size-5" />
                   </span>
                   <div>

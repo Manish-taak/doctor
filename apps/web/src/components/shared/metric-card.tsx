@@ -30,7 +30,7 @@ export function MetricCard({ label, value, icon: Icon, trend }: MetricCardProps)
             </span>
           )}
         </div>
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary">
           <Icon className="size-5" strokeWidth={2} />
         </div>
       </CardContent>
