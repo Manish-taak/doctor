@@ -77,7 +77,7 @@ export interface Faq {
   answer: string
 }
 
-export type AppointmentStatus = "upcoming" | "completed" | "cancelled"
+export type AppointmentStatus = "pending" | "upcoming" | "completed" | "cancelled"
 export type AppointmentType = "in-person" | "video"
 
 export interface Appointment {

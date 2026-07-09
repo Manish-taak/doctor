@@ -19,6 +19,7 @@ enum AppointmentType {
 }
 
 enum AppointmentStatus {
+  PENDING
   UPCOMING
   COMPLETED
   CANCELLED
@@ -127,7 +128,7 @@ model Appointment {
   doctor    DoctorProfile     @relation(fields: [doctorId], references: [id], onDelete: Cascade)
   date      DateTime
   type      AppointmentType
-  status    AppointmentStatus @default(UPCOMING)
+  status    AppointmentStatus @default(PENDING)
   location  String
   createdAt DateTime          @default(now())
 

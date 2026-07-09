@@ -20,12 +20,14 @@ import { cn } from "@/lib/utils"
 import type { Appointment, AppointmentStatus } from "@/types"
 
 const statusTabs: { value: AppointmentStatus; label: string }[] = [
+  { value: "pending", label: "Pending" },
   { value: "upcoming", label: "Upcoming" },
   { value: "completed", label: "Completed" },
   { value: "cancelled", label: "Cancelled" },
 ]
 
 const statusStyles: Record<AppointmentStatus, string> = {
+  pending: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
   upcoming: "bg-primary/10 text-primary",
   completed: "bg-muted text-muted-foreground",
   cancelled: "bg-destructive/10 text-destructive",

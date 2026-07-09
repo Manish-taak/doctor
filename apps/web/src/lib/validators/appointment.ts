@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const appointmentTypeSchema = z.enum(["IN_PERSON", "VIDEO"])
-export const appointmentStatusSchema = z.enum(["UPCOMING", "COMPLETED", "CANCELLED"])
+export const appointmentStatusSchema = z.enum(["PENDING", "UPCOMING", "COMPLETED", "CANCELLED"])
 
 export const createAppointmentSchema = z.object({
   doctorId: z.string().min(1, "Select a doctor"),

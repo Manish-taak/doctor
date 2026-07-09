@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import { CalendarDays, MapPin, Video } from "lucide-react"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -8,6 +9,7 @@ import { cn } from "@/lib/utils"
 import type { Appointment, AppointmentStatus } from "@/types"
 
 const statusStyles: Record<AppointmentStatus, string> = {
+  pending: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
   upcoming: "bg-primary/10 text-primary",
   completed: "bg-muted text-muted-foreground",
   cancelled: "bg-destructive/10 text-destructive",
@@ -16,9 +18,11 @@ const statusStyles: Record<AppointmentStatus, string> = {
 export function AppointmentCard({
   appointment,
   perspective = "patient",
+  actions,
 }: {
   appointment: Appointment
   perspective?: "patient" | "doctor"
+  actions?: ReactNode
 }) {
   const primaryName = perspective === "patient" ? appointment.doctorName : appointment.patientName
   const primaryInitials = perspective === "patient" ? appointment.doctorInitials : appointment.patientInitials
@@ -52,6 +56,8 @@ export function AppointmentCard({
           </span>
           <Badge className={statusStyles[appointment.status]}>{appointment.status}</Badge>
         </div>
+
+        {actions && <div className="flex items-center gap-2 sm:ml-2">{actions}</div>}
       </CardContent>
     </Card>
   )

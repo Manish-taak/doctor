@@ -10,7 +10,7 @@ export interface ApiAppointment {
   id: string
   date: string
   type: "IN_PERSON" | "VIDEO"
-  status: "UPCOMING" | "COMPLETED" | "CANCELLED"
+  status: "PENDING" | "UPCOMING" | "COMPLETED" | "CANCELLED"
   location: string
   patient?: { user: { name: string } }
   doctor?: { specialty: string; user: { name: string } }

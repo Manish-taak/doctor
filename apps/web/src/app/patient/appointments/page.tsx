@@ -10,6 +10,7 @@ import { getAppointments } from "@/lib/api/appointments"
 import type { AppointmentStatus } from "@/types"
 
 const statusTabs: { value: AppointmentStatus; label: string }[] = [
+  { value: "pending", label: "Pending" },
   { value: "upcoming", label: "Upcoming" },
   { value: "completed", label: "Completed" },
   { value: "cancelled", label: "Cancelled" },

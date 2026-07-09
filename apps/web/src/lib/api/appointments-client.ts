@@ -19,3 +19,20 @@ export async function createAppointment(_token: string, input: CreateAppointment
     throw new Error(body?.message ?? "Failed to book appointment")
   }
 }
+
+export async function updateAppointmentStatus(
+  _token: string,
+  id: string,
+  status: "PENDING" | "UPCOMING" | "COMPLETED" | "CANCELLED"
+): Promise<void> {
+  const response = await fetch(`/api/appointments/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  })
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => null)
+    throw new Error(body?.message ?? "Failed to update appointment")
+  }
+}
