@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createCategorySchema } from "@doctor/validators"
+import { createCategorySchema } from "@/lib/validators"
 
 import { apiError, parseBody } from "@/lib/server/api-handler"
 import { createCategory, findAllCategories } from "@/lib/server/services/categories"

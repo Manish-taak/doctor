@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createAppointmentSchema } from "@doctor/validators"
+import { createAppointmentSchema } from "@/lib/validators"
 
 import { apiError, parseBody } from "@/lib/server/api-handler"
 import { createAppointment } from "@/lib/server/services/appointments"

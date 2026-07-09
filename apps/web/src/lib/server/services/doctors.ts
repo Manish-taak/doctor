@@ -1,6 +1,6 @@
 import * as bcrypt from "bcrypt"
-import { prisma } from "@doctor/database"
-import type { CreateDoctorInput, UpdateDoctorProfileInput } from "@doctor/validators"
+import { prisma } from "@/lib/db"
+import type { CreateDoctorInput, UpdateDoctorProfileInput } from "@/lib/validators"
 
 import { NotFoundError } from "../errors"
 

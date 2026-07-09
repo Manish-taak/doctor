@@ -1,4 +1,4 @@
-import { prisma } from "@doctor/database"
+import { prisma } from "@/lib/db"
 
 const ACTIVE_WINDOW_DAYS = 180
 

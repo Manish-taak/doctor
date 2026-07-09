@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 
-import { prisma } from "../src/index"
+import { prisma } from "../src/lib/db"
 
 async function main() {
   const passwordHash = await bcrypt.hash("password123", 10)

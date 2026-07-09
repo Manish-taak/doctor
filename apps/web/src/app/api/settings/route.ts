@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { updateSettingsSchema } from "@doctor/validators"
+import { updateSettingsSchema } from "@/lib/validators"
 
 import { apiError, parseBody } from "@/lib/server/api-handler"
 import { getPlatformSettings, updatePlatformSettings } from "@/lib/server/services/settings"

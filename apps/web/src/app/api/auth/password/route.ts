@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { changePasswordSchema } from "@doctor/validators"
+import { changePasswordSchema } from "@/lib/validators"
 
 import { apiError, parseBody } from "@/lib/server/api-handler"
 import { changePassword } from "@/lib/server/services/auth"

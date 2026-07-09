@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { updateCategorySchema } from "@doctor/validators"
+import { updateCategorySchema } from "@/lib/validators"
 
 import { apiError, parseBody } from "@/lib/server/api-handler"
 import { deleteCategory, updateCategory } from "@/lib/server/services/categories"

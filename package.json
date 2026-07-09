@@ -3,18 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/*"
   ],
   "scripts": {
-    "postinstall": "npm run db:generate && npm run build -w packages/validators && npm run build -w packages/database",
+    "postinstall": "npm run db:generate -w apps/web",
     "dev": "npm run dev -w apps/web",
     "build": "npm run build -w apps/web && cp -r apps/web/public apps/web/.next/standalone/apps/web/public && cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/static",
     "start": "node apps/web/.next/standalone/apps/web/server.js",
     "lint": "npm run lint --workspaces --if-present",
-    "db:generate": "npm run generate -w packages/database",
-    "db:migrate": "npm run migrate -w packages/database",
-    "db:seed": "npm run seed -w packages/database",
-    "db:studio": "npm run studio -w packages/database"
+    "db:generate": "npm run db:generate -w apps/web",
+    "db:migrate": "npm run db:migrate -w apps/web",
+    "db:seed": "npm run db:seed -w apps/web",
+    "db:studio": "npm run db:studio -w apps/web"
   }
 }

@@ -1,5 +1,5 @@
-import { prisma } from "@doctor/database"
-import type { CreateTransactionInput, UpdateTransactionInput } from "@doctor/validators"
+import { prisma } from "@/lib/db"
+import type { CreateTransactionInput, UpdateTransactionInput } from "@/lib/validators"
 
 import { NotFoundError } from "../errors"
 import type { RequestUser } from "../session"

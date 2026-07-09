@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { registerSchema } from "@doctor/validators"
+import { registerSchema } from "@/lib/validators"
 
 import { apiError, parseBody } from "@/lib/server/api-handler"
 import { registerUser } from "@/lib/server/services/auth"

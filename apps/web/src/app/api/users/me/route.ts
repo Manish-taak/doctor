@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { updateProfileSchema } from "@doctor/validators"
+import { updateProfileSchema } from "@/lib/validators"
 
 import { apiError, parseBody } from "@/lib/server/api-handler"
 import { findMe, updateProfile } from "@/lib/server/services/users"

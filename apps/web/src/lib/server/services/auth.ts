@@ -1,6 +1,6 @@
 import * as bcrypt from "bcrypt"
-import { prisma } from "@doctor/database"
-import type { RegisterInput } from "@doctor/validators"
+import { prisma } from "@/lib/db"
+import type { RegisterInput } from "@/lib/validators"
 
 import { ConflictError, UnauthorizedError } from "../errors"
 

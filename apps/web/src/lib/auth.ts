@@ -1,8 +1,8 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import * as bcrypt from "bcrypt"
-import { prisma } from "@doctor/database"
-import { loginSchema } from "@doctor/validators"
+import { prisma } from "@/lib/db"
+import { loginSchema } from "@/lib/validators"
 
 import type { UserRole } from "@/types"
 

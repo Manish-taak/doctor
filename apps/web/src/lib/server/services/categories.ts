@@ -1,5 +1,5 @@
-import { prisma } from "@doctor/database"
-import type { CreateCategoryInput, UpdateCategoryInput } from "@doctor/validators"
+import { prisma } from "@/lib/db"
+import type { CreateCategoryInput, UpdateCategoryInput } from "@/lib/validators"
 
 import { BadRequestError } from "../errors"
 

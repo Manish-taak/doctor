@@ -1,5 +1,5 @@
-import { prisma } from "@doctor/database"
-import type { CreateMedicalRecordInput } from "@doctor/validators"
+import { prisma } from "@/lib/db"
+import type { CreateMedicalRecordInput } from "@/lib/validators"
 
 import { ForbiddenError, NotFoundError } from "../errors"
 import type { RequestUser } from "../session"

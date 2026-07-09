@@ -1,4 +1,4 @@
-import { prisma } from "@doctor/database"
+import { prisma } from "@/lib/db"
 
 import { ForbiddenError, NotFoundError } from "../errors"
 import type { RequestUser } from "../session"

@@ -1,5 +1,5 @@
-import { prisma, type Role } from "@doctor/database"
-import type { UpdateProfileInput } from "@doctor/validators"
+import { prisma, type Role } from "@/lib/db"
+import type { UpdateProfileInput } from "@/lib/validators"
 
 import { BadRequestError, NotFoundError } from "../errors"
 import type { RequestUser } from "../session"

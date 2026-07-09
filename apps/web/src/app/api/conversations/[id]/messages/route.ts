@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { sendMessageSchema } from "@doctor/validators"
+import { sendMessageSchema } from "@/lib/validators"
 
 import { apiError, parseBody } from "@/lib/server/api-handler"
 import { findMessages, sendMessage } from "@/lib/server/services/conversations"

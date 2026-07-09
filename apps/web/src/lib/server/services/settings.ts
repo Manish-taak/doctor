@@ -1,5 +1,5 @@
-import { prisma } from "@doctor/database"
-import type { UpdateSettingsInput } from "@doctor/validators"
+import { prisma } from "@/lib/db"
+import type { UpdateSettingsInput } from "@/lib/validators"
 
 const SETTINGS_ID = "platform-settings"
 
