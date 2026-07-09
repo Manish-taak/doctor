@@ -194,16 +194,6 @@ export function SettingsForm({ profile }: { profile: MyProfile }) {
               </div>
             </CardContent>
           </Card>
-
-          <Card className="mt-6 ring-foreground/5">
-            <CardContent className="flex items-center justify-between gap-4">
-              <div className="flex flex-col gap-0.5">
-                <p className="text-sm font-medium text-foreground">Two-factor authentication</p>
-                <p className="text-xs text-muted-foreground">Add an extra layer of security to your account.</p>
-              </div>
-              <Switch />
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
 

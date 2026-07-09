@@ -204,16 +204,6 @@ export function DoctorSettingsForm({ name, email }: { name: string; email: strin
                 </div>
               </div>
 
-              <Separator />
-
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-sm font-medium text-foreground">Two-factor authentication</span>
-                  <span className="text-xs text-muted-foreground">Add an extra layer of security to your account.</span>
-                </div>
-                <Switch onCheckedChange={() => toast("Two-factor authentication isn't available in this preview.")} />
-              </div>
-
               <div className="flex justify-end">
                 <Button onClick={handleChangePassword} disabled={changingPassword}>
                   Update password

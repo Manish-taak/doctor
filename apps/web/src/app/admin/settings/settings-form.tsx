@@ -26,7 +26,6 @@ export function AdminSettingsForm({ settings }: { settings: PlatformSettings }) 
   const { data: session } = useSession()
   const [platformName, setPlatformName] = useState(settings.platformName)
   const [supportEmail, setSupportEmail] = useState(settings.supportEmail)
-  const [enforce2fa, setEnforce2fa] = useState(settings.enforce2fa)
   const [sessionTimeout, setSessionTimeout] = useState(String(settings.sessionTimeoutMinutes))
   const [savingGeneral, setSavingGeneral] = useState(false)
   const [savingSecurity, setSavingSecurity] = useState(false)
@@ -49,7 +48,6 @@ export function AdminSettingsForm({ settings }: { settings: PlatformSettings }) 
     setSavingSecurity(true)
     try {
       await updateSettings(session.accessToken, {
-        enforce2fa,
         sessionTimeoutMinutes: Number(sessionTimeout),
       })
       toast.success("Security settings saved")
@@ -108,13 +106,6 @@ export function AdminSettingsForm({ settings }: { settings: PlatformSettings }) 
           <Card className="ring-foreground/5">
             <CardContent className="flex flex-col gap-5">
               <h2 className="font-heading text-base font-semibold text-foreground">Security</h2>
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex flex-col gap-0.5">
-                  <p className="text-sm font-medium text-foreground">Enforce two-factor authentication</p>
-                  <p className="text-sm text-muted-foreground">Require 2FA for all doctor and admin accounts.</p>
-                </div>
-                <Switch checked={enforce2fa} onCheckedChange={(checked) => setEnforce2fa(checked)} />
-              </div>
               <div className="flex items-center justify-between gap-4">
                 <div className="flex flex-col gap-1.5">
                   <Label htmlFor="session-timeout">Session timeout</Label>

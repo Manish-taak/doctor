@@ -23,3 +23,31 @@ export async function createCategory(
   const category = (await response.json()) as { id: string; name: string; icon: string }
   return { ...category, doctorCount: 0, appointmentCount: 0 }
 }
+
+export async function updateCategory(
+  _token: string,
+  id: string,
+  input: { name?: string; icon?: string }
+): Promise<{ id: string; name: string; icon: string }> {
+  const response = await fetch(`/api/categories/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  })
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => null)
+    throw new Error(body?.message ?? "Failed to update category")
+  }
+
+  return (await response.json()) as { id: string; name: string; icon: string }
+}
+
+export async function deleteCategory(_token: string, id: string): Promise<void> {
+  const response = await fetch(`/api/categories/${id}`, { method: "DELETE" })
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => null)
+    throw new Error(body?.message ?? "Failed to delete category")
+  }
+}
